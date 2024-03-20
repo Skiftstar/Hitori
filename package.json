@@ -1,0 +1,22 @@
+{
+  "name": "hitori",
+  "version": "1.0.0",
+  "description": "A general Purpose Discord Bot with DiscordJS and Typescript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Skiftstar/Hitori.git"
+  },
+  "author": "Skiftstar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Skiftstar/Hitori/issues"
+  },
+  "homepage": "https://github.com/Skiftstar/Hitori#readme",
+  "dependencies": {
+    "discord.js": "^14.14.1"
+  }
+}
