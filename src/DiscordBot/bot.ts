@@ -3,7 +3,7 @@ import {
   TextChannel,
   ChatInputCommandInteraction,
 } from "discord.js"
-import { getConfigValue } from "../Config/Config"
+import { getConfigValue } from "../Config/config"
 import { client } from ".."
 
 export const startBot = () => {
@@ -56,4 +56,8 @@ export const getChannelById = (channelId: string) => {
   return client.guilds.cache
     .get(guildId)
     ?.channels.cache.get(channelId) as TextChannel
+}
+
+export const getChannelsOfGuild = (guildId: string) => {
+  return client.guilds.cache.get(guildId)?.channels.cache.values()
 }

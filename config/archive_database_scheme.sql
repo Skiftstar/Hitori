@@ -13,7 +13,8 @@ CREATE TABLE Threads (
 CREATE TABLE Users (
     UserID INTEGER PRIMARY KEY,
     UserName TEXT NOT NULL,
-    Discriminator INTEGER NOT NULL
+    DisplayName TEXT NOT NULL,
+    Discriminator INTEGER
 );
 
 CREATE TABLE Messages (
@@ -31,5 +32,6 @@ CREATE TABLE Media (
     MessageID INTEGER,
     URL TEXT,
     Type TEXT,
+    MediaData BLOB,
     FOREIGN KEY(MessageID) REFERENCES Messages(MessageID)
 );

@@ -1,7 +1,7 @@
 import { readdirSync } from "fs"
 import path from "path"
 import { Collection, GatewayIntentBits } from "discord.js"
-import { getConfigValue } from "./Config/Config"
+import { getConfigValue } from "./Config/config"
 import { BotClient } from "./DiscordBot/botClient"
 import { REST, Routes } from "discord.js"
 import { sendError, startBot } from "./DiscordBot/bot"
