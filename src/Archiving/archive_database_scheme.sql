@@ -1,6 +1,13 @@
+CREATE TABLE Categories (
+    CategoryID INTEGER PRIMARY KEY,
+    CategoryName TEXT NOT NULL
+);
+
 CREATE TABLE Channels (
     ChannelID INTEGER PRIMARY KEY,
-    ChannelName TEXT NOT NULL
+    CategoryID INTEGER,
+    ChannelName TEXT NOT NULL,
+    FOREIGN KEY(CategoryID) REFERENCES Categories(CategoryID)
 );
 
 CREATE TABLE Threads (

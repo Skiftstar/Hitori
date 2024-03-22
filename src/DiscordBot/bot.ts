@@ -2,6 +2,7 @@ import {
   EmbedBuilder,
   TextChannel,
   ChatInputCommandInteraction,
+  GuildBasedChannel,
 } from "discord.js"
 import { getConfigValue } from "../Config/config"
 import { client } from ".."
@@ -59,5 +60,12 @@ export const getChannelById = (channelId: string) => {
 }
 
 export const getChannelsOfGuild = (guildId: string) => {
-  return client.guilds.cache.get(guildId)?.channels.cache.values()
+  const guild = client.guilds.cache.get(guildId)
+
+  const channels = Array.from(guild?.channels.cache.values() || [])
+  return channels
+}
+
+export const getGuild = (guildId: string) => {
+  return client.guilds.cache.get(guildId)
 }
