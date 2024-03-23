@@ -21,7 +21,7 @@ export const archiveServer = async (guildId: string) => {
 
   const dbName = `${guild.name}-${guild.id}.db`
 
-  await createDatabase(dbName, "./Archiving/archive_database_scheme.sql").catch(
+  await createDatabase(dbName, "./config/Archiving/archive_database_scheme.sql").catch(
     (error) => {
       throw new Error(`Error while creating database: ${error}`)
     }
