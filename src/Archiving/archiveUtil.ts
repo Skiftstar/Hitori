@@ -81,18 +81,17 @@ const archiveChannels = async (
 }
 
 const archiveMessages = async (channel: TextChannel, dbName: string) => {
-  // Fetch messages from channel
   const messageInfos: MessageInfos = []
 
-  channel.messages.fetch().then((messages) => {
-    messages.forEach((message) => {
-      messageInfos.push({
-        content: message.content,
-        id: message.id,
-        threadId: message.reference?.messageId || null,
-        userId: message.author.id,
-        timestamp: message.createdTimestamp,
-      })
+  const messages = await channel.messages.fetch()
+
+  messages.forEach((message) => {
+    messageInfos.push({
+      content: message.content,
+      id: message.id,
+      threadId: message.reference?.messageId || null,
+      userId: message.author.id,
+      timestamp: message.createdTimestamp,
     })
   })
 
