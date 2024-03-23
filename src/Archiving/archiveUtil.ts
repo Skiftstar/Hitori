@@ -1,8 +1,17 @@
-import { ChannelType, GuildBasedChannel } from "discord.js"
+import {
+  BaseGuildTextChannel,
+  ChannelType,
+  GuildBasedChannel,
+  TextChannel,
+} from "discord.js"
 import { getChannelsOfGuild, getGuild } from "../DiscordBot/bot"
 import { createDatabase } from "../Database/dbUtil"
-import { CategoryInfos, ChannelInfos } from "./archiveTypes"
-import { insertCategories, insertChannels } from "./archiveDBUtil"
+import { CategoryInfos, ChannelInfos, MessageInfos } from "./archiveTypes"
+import {
+  insertCategories,
+  insertChannels,
+  insertMessages,
+} from "./archiveDBUtil"
 
 export const archiveServer = async (guildId: string) => {
   const guild = getGuild(guildId)
@@ -21,14 +30,21 @@ export const archiveServer = async (guildId: string) => {
 
   const dbName = `${guild.name}-${guild.id}.db`
 
-  await createDatabase(dbName, "./config/Archiving/archive_database_scheme.sql").catch(
-    (error) => {
-      throw new Error(`Error while creating database: ${error}`)
-    }
-  )
+  await createDatabase(
+    dbName,
+    "./config/Archiving/archive_database_scheme.sql"
+  ).catch((error) => {
+    throw new Error(`Error while creating database: ${error}`)
+  })
 
   await archiveCategories(categories, dbName)
   await archiveChannels(textChannels, dbName)
+
+  await Promise.all(
+    textChannels.map(async (channel) => {
+      await archiveMessages(channel as TextChannel, dbName)
+    })
+  )
 }
 
 const archiveCategories = async (
@@ -62,4 +78,23 @@ const archiveChannels = async (
   })
 
   await insertChannels(channelInfos, dbName)
+}
+
+const archiveMessages = async (channel: TextChannel, dbName: string) => {
+  // Fetch messages from channel
+  const messageInfos: MessageInfos = []
+
+  channel.messages.fetch().then((messages) => {
+    messages.forEach((message) => {
+      messageInfos.push({
+        content: message.content,
+        id: message.id,
+        threadId: message.reference?.messageId || null,
+        userId: message.author.id,
+        timestamp: message.createdTimestamp,
+      })
+    })
+  })
+
+  await insertMessages(messageInfos, dbName)
 }

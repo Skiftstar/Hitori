@@ -1,5 +1,5 @@
 import { open } from "sqlite"
-import { CategoryInfos, ChannelInfos } from "./archiveTypes"
+import { CategoryInfos, ChannelInfos, MessageInfos } from "./archiveTypes"
 import { Database } from "sqlite3"
 
 export const insertCategories = async (
@@ -12,7 +12,7 @@ export const insertCategories = async (
   })
 
   categories.forEach((category) => {
-    db.run("INSERT INTO categories (name, id) VALUES (?, ?)", [
+    db.run("INSERT OR IGNORE INTO categories (name, id) VALUES (?, ?)", [
       category.name,
       category.id,
     ])
@@ -31,11 +31,35 @@ export const insertChannels = async (
   })
 
   channels.forEach((channel) => {
-    db.run("INSERT INTO channels (name, id, categoryId) VALUES (?, ?, ?)", [
-      channel.name,
-      channel.id,
-      channel.categoryId,
-    ])
+    db.run(
+      "INSERT OR IGNORE INTO channels (name, id, categoryId) VALUES (?, ?, ?)",
+      [channel.name, channel.id, channel.categoryId]
+    )
+  })
+
+  db.close()
+}
+
+export const insertMessages = async (
+  messages: MessageInfos,
+  dbName: string
+) => {
+  const db = await open({
+    filename: dbName,
+    driver: Database,
+  })
+
+  messages.forEach((message) => {
+    db.run(
+      "INSERT OR IGNORE INTO messages (content, id, threadId, userId, timestamp) VALUES (?, ?, ?, ?, ?)",
+      [
+        message.content,
+        message.id,
+        message.threadId,
+        message.userId,
+        message.timestamp,
+      ]
+    )
   })
 
   db.close()

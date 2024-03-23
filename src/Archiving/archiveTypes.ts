@@ -8,3 +8,11 @@ export type ChannelInfos = {
   id: string
   categoryId: string | null
 }[]
+
+export type MessageInfos = {
+  content: string | null
+  id: string
+  threadId: string | null
+  userId: string
+  timestamp: number
+}[]
