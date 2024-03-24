@@ -2,16 +2,23 @@ import {
   BaseGuildTextChannel,
   ChannelType,
   GuildBasedChannel,
+  Message,
   TextChannel,
 } from "discord.js"
 import { getChannelsOfGuild, getGuild } from "../DiscordBot/bot"
 import { createDatabase } from "../Database/dbUtil"
-import { CategoryInfos, ChannelInfos, MessageInfos } from "./archiveTypes"
+import {
+  CategoryInfo,
+  ChannelInfo,
+  MediaInfo,
+  MessageInfo,
+} from "./archiveTypes"
 import {
   insertCategories,
   insertChannels,
   insertMessages,
 } from "./archiveDBUtil"
+import { get } from "https"
 
 export const archiveServer = async (guildId: string) => {
   const guild = getGuild(guildId)
@@ -51,7 +58,7 @@ const archiveCategories = async (
   categories: GuildBasedChannel[],
   dbName: string
 ) => {
-  const categoryInfos: CategoryInfos = []
+  const categoryInfos: CategoryInfo[] = []
 
   categories.forEach((category) => {
     categoryInfos.push({
@@ -67,7 +74,7 @@ const archiveChannels = async (
   channels: GuildBasedChannel[],
   dbName: string
 ) => {
-  const channelInfos: ChannelInfos = []
+  const channelInfos: ChannelInfo[] = []
 
   channels.forEach((channel) => {
     channelInfos.push({
@@ -81,19 +88,68 @@ const archiveChannels = async (
 }
 
 const archiveMessages = async (channel: TextChannel, dbName: string) => {
-  const messageInfos: MessageInfos = []
+  const messageInfos: MessageInfo[] = []
+  const mediaInfos: MediaInfo[] = []
 
   const messages = await channel.messages.fetch()
 
-  messages.forEach((message) => {
-    messageInfos.push({
-      content: message.content,
-      id: message.id,
-      threadId: message.reference?.messageId || null,
-      userId: message.author.id,
-      timestamp: message.createdTimestamp,
+  await Promise.all(
+    messages.map(async (message) => {
+      messageInfos.push({
+        content: message.content,
+        id: message.id,
+        threadId: message.reference?.messageId || null,
+        userId: message.author.id,
+        timestamp: message.createdTimestamp,
+      })
+
+      if (message.attachments.size > 0) {
+        const media = await archiveMedia(message)
+        mediaInfos.push(...media)
+      }
     })
-  })
+  )
 
   await insertMessages(messageInfos, dbName)
+}
+
+const archiveMedia = async (message: Message) => {
+  const mediaInfos: MediaInfo[] = []
+
+  const attachments = Array.from(message.attachments.values())
+  await Promise.all(
+    attachments.map(async (attachment) => {
+      const attachmentData = await downloadMedia(attachment.url)
+
+      mediaInfos.push({
+        attachmentId: attachment.id,
+        messageId: message.id,
+        url: attachment.url,
+        type: attachment.contentType || "unknown",
+        data: attachmentData,
+      })
+    })
+  )
+
+  return mediaInfos
+}
+
+const downloadMedia = async (url: string) => {
+  return new Promise((resolve, reject) => {
+    const chunks: any[] = []
+
+    get(url, (response) => {
+      response.on("data", (chunk) => {
+        chunks.push(chunk)
+      })
+
+      response.on("end", () => {
+        resolve(Buffer.concat(chunks))
+      })
+
+      response.on("error", (err) => {
+        reject(err)
+      })
+    })
+  })
 }

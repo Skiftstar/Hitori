@@ -1,9 +1,9 @@
 import { open } from "sqlite"
-import { CategoryInfos, ChannelInfos, MessageInfos } from "./archiveTypes"
 import { Database } from "sqlite3"
+import { CategoryInfo, ChannelInfo, MessageInfo } from "./archiveTypes"
 
 export const insertCategories = async (
-  categories: CategoryInfos,
+  categories: CategoryInfo[],
   dbName: string
 ) => {
   const db = await open({
@@ -22,7 +22,7 @@ export const insertCategories = async (
 }
 
 export const insertChannels = async (
-  channels: ChannelInfos,
+  channels: ChannelInfo[],
   dbName: string
 ) => {
   const db = await open({
@@ -41,7 +41,7 @@ export const insertChannels = async (
 }
 
 export const insertMessages = async (
-  messages: MessageInfos,
+  messages: MessageInfo[],
   dbName: string
 ) => {
   const db = await open({
