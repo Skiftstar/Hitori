@@ -19,9 +19,12 @@ CREATE TABLE Threads (
 
 CREATE TABLE Users (
     id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
+    username TEXT NOT NULL,
     displayName TEXT NOT NULL,
-    discriminator INTEGER
+    discriminator INTEGER,
+    avatarURL TEXT,
+    avatarData BLOB,
+    UNIQUE(username, discriminator)
 );
 
 CREATE TABLE Messages (

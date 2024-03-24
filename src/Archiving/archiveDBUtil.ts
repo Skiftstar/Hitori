@@ -1,6 +1,6 @@
 import { open } from "sqlite"
 import { Database } from "sqlite3"
-import { CategoryInfo, ChannelInfo, MediaInfo, MessageInfo } from "./archiveTypes"
+import { CategoryInfo, ChannelInfo, MediaInfo, MessageInfo, UserInfo } from "./archiveTypes"
 
 export const insertCategories = async (
   categories: CategoryInfo[],
@@ -78,6 +78,32 @@ export const insertMedia = async (
     db.run(
       "INSERT OR IGNORE INTO media (id, messageId, url, type, data) VALUES (?, ?, ?, ?, ?)",
       [mediaInfo.id, mediaInfo.messageId, mediaInfo.url, mediaInfo.type, mediaInfo.data]
+    )
+  })
+
+  db.close()
+}
+
+export const insertUsers = async (
+  users: UserInfo[],
+  dbName: string
+) => {
+  const db = await open({
+    filename: dbName,
+    driver: Database,
+  })
+
+  users.forEach((user) => {
+    db.run(
+      "INSERT OR IGNORE INTO users (id, displayName, username, discriminator, avatarURL, avatarData) VALUES (?, ?, ?, ?, ?, ?)",
+      [
+        user.id,
+        user.displayName,
+        user.username,
+        user.discriminator,
+        user.avatarURL,
+        user.avatarData,
+      ]
     )
   })
 

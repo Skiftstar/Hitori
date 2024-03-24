@@ -69,3 +69,8 @@ export const getChannelsOfGuild = (guildId: string) => {
 export const getGuild = (guildId: string) => {
   return client.guilds.cache.get(guildId)
 }
+
+export const getUsersOfGuild = (guildId: string) => {
+  const guild = client.guilds.cache.get(guildId)
+  return Array.from(guild?.members.cache.values() || [])
+}

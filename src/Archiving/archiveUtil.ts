@@ -2,22 +2,29 @@ import {
   BaseGuildTextChannel,
   ChannelType,
   GuildBasedChannel,
+  GuildMember,
   Message,
   TextChannel,
 } from "discord.js"
-import { getChannelsOfGuild, getGuild } from "../DiscordBot/bot"
+import {
+  getChannelsOfGuild,
+  getGuild,
+  getUsersOfGuild,
+} from "../DiscordBot/bot"
 import { createDatabase } from "../Database/dbUtil"
 import {
   CategoryInfo,
   ChannelInfo,
   MediaInfo,
   MessageInfo,
+  UserInfo,
 } from "./archiveTypes"
 import {
   insertCategories,
   insertChannels,
   insertMedia,
   insertMessages,
+  insertUsers,
 } from "./archiveDBUtil"
 import { get } from "https"
 
@@ -36,6 +43,8 @@ export const archiveServer = async (guildId: string) => {
     (channel) => channel.type === ChannelType.GuildCategory
   )
 
+  const users = getUsersOfGuild(guildId)
+
   const dbName = `${guild.name}-${guild.id}.db`
 
   await createDatabase(
@@ -47,12 +56,33 @@ export const archiveServer = async (guildId: string) => {
 
   await archiveCategories(categories, dbName)
   await archiveChannels(textChannels, dbName)
+  await archiveUsers(users, dbName)
 
   await Promise.all(
     textChannels.map(async (channel) => {
       await archiveMessages(channel as TextChannel, dbName)
     })
   )
+}
+
+const archiveUsers = async (users: GuildMember[], dbName: string) => {
+  const userInfos: UserInfo[] = []
+
+  await Promise.all(
+    users.map(async (user) => {
+      const avatarData = await downloadMedia(user.user.avatarURL() || null)
+      userInfos.push({
+        id: user.id,
+        displayName: user.displayName,
+        username: user.user.username,
+        discriminator: user.user.discriminator,
+        avatarURL: user.user.avatarURL() || "",
+        avatarData: avatarData,
+      })
+    })
+  )
+
+  await insertUsers(userInfos, dbName)
 }
 
 const archiveCategories = async (
@@ -136,7 +166,8 @@ const archiveMedia = async (message: Message) => {
   return mediaInfos
 }
 
-const downloadMedia = async (url: string) => {
+const downloadMedia = async (url: string | null) => {
+  if (!url) return null
   return new Promise((resolve, reject) => {
     const chunks: any[] = []
 

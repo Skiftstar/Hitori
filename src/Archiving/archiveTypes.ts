@@ -24,3 +24,12 @@ export type MediaInfo = {
   type: string
   data: any
 }
+
+export type UserInfo = {
+  id: string
+  displayName: string
+  username: string
+  discriminator: string
+  avatarURL: string
+  avatarData: any
+}
