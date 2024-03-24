@@ -6,7 +6,7 @@ import { BotClient } from "./DiscordBot/botClient"
 import { REST, Routes } from "discord.js"
 import { sendError, startBot } from "./DiscordBot/bot"
 
-export const client = new BotClient({ intents: [GatewayIntentBits.Guilds] })
+export const client = new BotClient({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent] })
 
 const commandFolder = path.join(__dirname, "Commands")
 const commandFiles = readdirSync(commandFolder)
