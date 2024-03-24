@@ -16,6 +16,7 @@ import {
 import {
   insertCategories,
   insertChannels,
+  insertMedia,
   insertMessages,
 } from "./archiveDBUtil"
 import { get } from "https"
@@ -111,6 +112,7 @@ const archiveMessages = async (channel: TextChannel, dbName: string) => {
   )
 
   await insertMessages(messageInfos, dbName)
+  await insertMedia(mediaInfos, dbName)
 }
 
 const archiveMedia = async (message: Message) => {
@@ -122,7 +124,7 @@ const archiveMedia = async (message: Message) => {
       const attachmentData = await downloadMedia(attachment.url)
 
       mediaInfos.push({
-        attachmentId: attachment.id,
+        id: attachment.id,
         messageId: message.id,
         url: attachment.url,
         type: attachment.contentType || "unknown",

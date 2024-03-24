@@ -1,6 +1,6 @@
 import { open } from "sqlite"
 import { Database } from "sqlite3"
-import { CategoryInfo, ChannelInfo, MessageInfo } from "./archiveTypes"
+import { CategoryInfo, ChannelInfo, MediaInfo, MessageInfo } from "./archiveTypes"
 
 export const insertCategories = async (
   categories: CategoryInfo[],
@@ -59,6 +59,25 @@ export const insertMessages = async (
         message.userId,
         message.timestamp,
       ]
+    )
+  })
+
+  db.close()
+}
+
+export const insertMedia = async (
+  media: MediaInfo[],
+  dbName: string
+) => {
+  const db = await open({
+    filename: dbName,
+    driver: Database,
+  })
+
+  media.forEach((mediaInfo) => {
+    db.run(
+      "INSERT OR IGNORE INTO media (id, messageId, url, type, data) VALUES (?, ?, ?, ?, ?)",
+      [mediaInfo.id, mediaInfo.messageId, mediaInfo.url, mediaInfo.type, mediaInfo.data]
     )
   })
 

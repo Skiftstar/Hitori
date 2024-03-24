@@ -18,7 +18,7 @@ export type MessageInfo = {
 }
 
 export type MediaInfo = {
-  attachmentId: string,
+  id: string,
   messageId: string
   url: string
   type: string

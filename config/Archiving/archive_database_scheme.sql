@@ -39,6 +39,6 @@ CREATE TABLE Media (
     messageID INTEGER,
     url TEXT,
     type TEXT,
-    mediaData BLOB,
+    data BLOB,
     FOREIGN KEY(messageID) REFERENCES Messages(id)
 );
