@@ -17,6 +17,7 @@ import {
   ChannelInfo,
   MediaInfo,
   MessageInfo,
+  SERVER_ARCHIVE_FOLDER_NAME,
   ThreadInfo,
   UserInfo,
 } from "./archiveTypes"
@@ -48,7 +49,7 @@ export const archiveServer = async (guildId: string) => {
 
   const users = getUsersOfGuild(guildId)
 
-  const dbName = `Archived-Servers/${guild.name}-${guild.id}.db`
+  const dbName = `${SERVER_ARCHIVE_FOLDER_NAME}/${guild.name}-${guild.id}.db`
 
   await createDatabase(
     dbName,
