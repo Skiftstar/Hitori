@@ -44,9 +44,7 @@ export const archiveServer = async (guildId: string) => {
   const categories = channelsOnGuild.filter(
     (channel) => channel.type === ChannelType.GuildCategory
   )
-  const threads = channelsOnGuild.filter(
-    (channel) => channel.isThread()
-  )
+  const threads = channelsOnGuild.filter((channel) => channel.isThread())
 
   const users = getUsersOfGuild(guildId)
 
@@ -75,7 +73,6 @@ export const archiveServer = async (guildId: string) => {
     })
   )
   await archiveThreads(threads as ThreadChannel[], dbName)
-
 }
 
 const archiveThreads = async (threads: ThreadChannel[], dbName: string) => {
@@ -91,7 +88,6 @@ const archiveThreads = async (threads: ThreadChannel[], dbName: string) => {
 
   await insertThreads(threadInfos, dbName)
 }
-
 
 const archiveUsers = async (users: GuildMember[], dbName: string) => {
   const userInfos: UserInfo[] = []
@@ -146,7 +142,10 @@ const archiveChannels = async (
   await insertChannels(channelInfos, dbName)
 }
 
-const archiveMessages = async (channel: TextChannel | ThreadChannel, dbName: string) => {
+const archiveMessages = async (
+  channel: TextChannel | ThreadChannel,
+  dbName: string
+) => {
   const messageInfos: MessageInfo[] = []
   const mediaInfos: MediaInfo[] = []
 
