@@ -15,13 +15,6 @@ export const sendMessage = (channel: TextChannel, message: string) => {
   channel.send(message)
 }
 
-export const sendReply = (
-  interaction: ChatInputCommandInteraction,
-  reply: string
-) => {
-  interaction.reply(reply)
-}
-
 export const replyEmbed = (
   interaction: ChatInputCommandInteraction,
   embed: EmbedBuilder

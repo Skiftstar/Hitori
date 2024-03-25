@@ -1,5 +1,4 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js"
-import { sendReply } from "../DiscordBot/bot"
 import { archiveServer } from "../Archiving/archiveUtil"
 
 module.exports = {
@@ -9,13 +8,10 @@ module.exports = {
   async execute(interaction: ChatInputCommandInteraction) {
     const guildId = interaction.guildId
     if (!guildId) {
-      return sendReply(
-        interaction,
-        "This command can only be used in a server."
-      )
+      return interaction.reply("This command can only be used in a server.")
     }
 
-    sendReply(interaction, "Starting Archiving...")
+    await interaction.reply("Starting Archiving...")
 
     archiveServer(guildId)
       .then(() => {

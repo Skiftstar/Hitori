@@ -48,7 +48,7 @@ export const archiveServer = async (guildId: string) => {
 
   const users = getUsersOfGuild(guildId)
 
-  const dbName = `${guild.name}-${guild.id}.db`
+  const dbName = `Archived-Servers/${guild.name}-${guild.id}.db`
 
   await createDatabase(
     dbName,
