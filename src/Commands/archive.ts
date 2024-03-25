@@ -1,9 +1,8 @@
 import {
   SlashCommandBuilder,
   ChatInputCommandInteraction,
-  ChannelType,
 } from "discord.js"
-import { getChannelsOfGuild, sendReply } from "../DiscordBot/bot"
+import { sendReply } from "../DiscordBot/bot"
 import { archiveServer } from "../Archiving/archiveUtil"
 
 module.exports = {
@@ -19,12 +18,14 @@ module.exports = {
       )
     }
 
+    sendReply(interaction, "Starting Archiving...")
+
     archiveServer(guildId)
       .then(() => {
-        sendReply(interaction, "Server archived successfully.")
+        interaction.editReply("Server archived successfully.")
       })
       .catch((error) => {
-        sendReply(interaction, `Error while archiving server: ${error}`)
+        interaction.editReply(`Error while archiving server: ${error}`)
       })
   },
 }

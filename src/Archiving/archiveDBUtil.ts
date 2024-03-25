@@ -1,6 +1,6 @@
 import { open } from "sqlite"
 import { Database } from "sqlite3"
-import { CategoryInfo, ChannelInfo, MediaInfo, MessageInfo, UserInfo } from "./archiveTypes"
+import { CategoryInfo, ChannelInfo, MediaInfo, MessageInfo, ThreadInfo, UserInfo } from "./archiveTypes"
 
 export const insertCategories = async (
   categories: CategoryInfo[],
@@ -104,6 +104,25 @@ export const insertUsers = async (
         user.avatarURL,
         user.avatarData,
       ]
+    )
+  })
+
+  db.close()
+}
+
+export const insertThreads = async (
+  threads: ThreadInfo[],
+  dbName: string
+) => {
+  const db = await open({
+    filename: dbName,
+    driver: Database,
+  })
+
+  threads.forEach((thread) => {
+    db.run(
+      "INSERT OR IGNORE INTO threads (name, id, channelId) VALUES (?, ?, ?)",
+      [thread.name, thread.id, thread.channelId]
     )
   })
 

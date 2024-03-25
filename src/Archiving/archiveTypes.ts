@@ -33,3 +33,9 @@ export type UserInfo = {
   avatarURL: string
   avatarData: any
 }
+
+export type ThreadInfo = {
+  name: string
+  id: string
+  channelId: string | null
+}

@@ -1,10 +1,10 @@
 import {
-  BaseGuildTextChannel,
   ChannelType,
   GuildBasedChannel,
   GuildMember,
   Message,
   TextChannel,
+  ThreadChannel,
 } from "discord.js"
 import {
   getChannelsOfGuild,
@@ -17,6 +17,7 @@ import {
   ChannelInfo,
   MediaInfo,
   MessageInfo,
+  ThreadInfo,
   UserInfo,
 } from "./archiveTypes"
 import {
@@ -24,6 +25,7 @@ import {
   insertChannels,
   insertMedia,
   insertMessages,
+  insertThreads,
   insertUsers,
 } from "./archiveDBUtil"
 import { get } from "https"
@@ -42,6 +44,9 @@ export const archiveServer = async (guildId: string) => {
   const categories = channelsOnGuild.filter(
     (channel) => channel.type === ChannelType.GuildCategory
   )
+  const threads = channelsOnGuild.filter(
+    (channel) => channel.isThread()
+  )
 
   const users = getUsersOfGuild(guildId)
 
@@ -59,11 +64,34 @@ export const archiveServer = async (guildId: string) => {
   await archiveUsers(users, dbName)
 
   await Promise.all(
-    textChannels.map(async (channel) => {
+    textChannels.map(async (channel: GuildBasedChannel) => {
       await archiveMessages(channel as TextChannel, dbName)
     })
   )
+
+  await Promise.all(
+    threads.map(async (channel: GuildBasedChannel) => {
+      await archiveMessages(channel as ThreadChannel, dbName)
+    })
+  )
+  await archiveThreads(threads as ThreadChannel[], dbName)
+
 }
+
+const archiveThreads = async (threads: ThreadChannel[], dbName: string) => {
+  const threadInfos: ThreadInfo[] = []
+
+  threads.forEach((thread) => {
+    threadInfos.push({
+      name: thread.name,
+      id: thread.id,
+      channelId: thread.parentId,
+    })
+  })
+
+  await insertThreads(threadInfos, dbName)
+}
+
 
 const archiveUsers = async (users: GuildMember[], dbName: string) => {
   const userInfos: UserInfo[] = []
@@ -118,7 +146,7 @@ const archiveChannels = async (
   await insertChannels(channelInfos, dbName)
 }
 
-const archiveMessages = async (channel: TextChannel, dbName: string) => {
+const archiveMessages = async (channel: TextChannel | ThreadChannel, dbName: string) => {
   const messageInfos: MessageInfo[] = []
   const mediaInfos: MediaInfo[] = []
 
