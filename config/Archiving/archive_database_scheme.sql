@@ -30,10 +30,12 @@ CREATE TABLE Users (
 CREATE TABLE Messages (
     id INTEGER PRIMARY KEY,
     userID INTEGER,
+    channelID INTEGER,
     threadID INTEGER,
     content TEXT,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(userID) REFERENCES Users(id),
+    FOREIGN KEY(channelID) REFERENCES Channels(id),
     FOREIGN KEY(threadID) REFERENCES Threads(id)
 );
 

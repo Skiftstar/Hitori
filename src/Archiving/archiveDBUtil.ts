@@ -51,10 +51,11 @@ export const insertMessages = async (
 
   messages.forEach((message) => {
     db.run(
-      "INSERT OR IGNORE INTO messages (content, id, threadId, userId, timestamp) VALUES (?, ?, ?, ?, ?)",
+      "INSERT OR IGNORE INTO messages (content, id, channelId, threadId, userId, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
       [
         message.content,
         message.id,
+        message.channelId,
         message.threadId,
         message.userId,
         message.timestamp,

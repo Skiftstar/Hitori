@@ -12,6 +12,7 @@ export type ChannelInfo = {
 export type MessageInfo = {
   content: string | null
   id: string
+  channelId: string
   threadId: string | null
   userId: string
   timestamp: number

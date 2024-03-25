@@ -157,7 +157,8 @@ const archiveMessages = async (channel: TextChannel | ThreadChannel, dbName: str
       messageInfos.push({
         content: message.content,
         id: message.id,
-        threadId: message.reference?.messageId || null,
+        channelId: message.channel.id,
+        threadId: message.channel.isThread() ? message.channel.id : null,
         userId: message.author.id,
         timestamp: message.createdTimestamp,
       })
