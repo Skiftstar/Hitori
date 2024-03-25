@@ -19,7 +19,7 @@ export type MessageInfo = {
 }
 
 export type MediaInfo = {
-  id: string,
+  id: string
   messageId: string
   url: string
   type: string

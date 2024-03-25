@@ -1,7 +1,4 @@
-import {
-  SlashCommandBuilder,
-  ChatInputCommandInteraction,
-} from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js"
 import { sendReply } from "../DiscordBot/bot"
 import { archiveServer } from "../Archiving/archiveUtil"
 

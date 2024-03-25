@@ -1,6 +1,13 @@
 import { open } from "sqlite"
 import { Database } from "sqlite3"
-import { CategoryInfo, ChannelInfo, MediaInfo, MessageInfo, ThreadInfo, UserInfo } from "./archiveTypes"
+import {
+  CategoryInfo,
+  ChannelInfo,
+  MediaInfo,
+  MessageInfo,
+  ThreadInfo,
+  UserInfo,
+} from "./archiveTypes"
 
 export const insertCategories = async (
   categories: CategoryInfo[],
@@ -66,10 +73,7 @@ export const insertMessages = async (
   db.close()
 }
 
-export const insertMedia = async (
-  media: MediaInfo[],
-  dbName: string
-) => {
+export const insertMedia = async (media: MediaInfo[], dbName: string) => {
   const db = await open({
     filename: dbName,
     driver: Database,
@@ -78,17 +82,20 @@ export const insertMedia = async (
   media.forEach((mediaInfo) => {
     db.run(
       "INSERT OR IGNORE INTO media (id, messageId, url, type, data) VALUES (?, ?, ?, ?, ?)",
-      [mediaInfo.id, mediaInfo.messageId, mediaInfo.url, mediaInfo.type, mediaInfo.data]
+      [
+        mediaInfo.id,
+        mediaInfo.messageId,
+        mediaInfo.url,
+        mediaInfo.type,
+        mediaInfo.data,
+      ]
     )
   })
 
   db.close()
 }
 
-export const insertUsers = async (
-  users: UserInfo[],
-  dbName: string
-) => {
+export const insertUsers = async (users: UserInfo[], dbName: string) => {
   const db = await open({
     filename: dbName,
     driver: Database,
@@ -111,10 +118,7 @@ export const insertUsers = async (
   db.close()
 }
 
-export const insertThreads = async (
-  threads: ThreadInfo[],
-  dbName: string
-) => {
+export const insertThreads = async (threads: ThreadInfo[], dbName: string) => {
   const db = await open({
     filename: dbName,
     driver: Database,
