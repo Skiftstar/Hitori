@@ -29,7 +29,7 @@ const Navbar = () => {
               className="bg-bg-color text-text-color text-xl"
               display="flex"
               flexDirection="column"
-              gap={2}
+              gap={3}
             >
               <div className="transition ease-in-out duration-300 hover:bg-highlight-color hover:text-black px-2 rounded cursor-pointer">
                 Home
