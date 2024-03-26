@@ -1,6 +1,10 @@
-import { useState } from "react"
+import { ReactNode, useState } from "react"
 
-const SidebarExp = () => {
+interface SidebarWrapperProps {
+  children?: ReactNode
+}
+
+const SidebarWrapper = ({ children }: SidebarWrapperProps) => {
   const [open, setOpen] = useState(false)
 
   return (
@@ -11,36 +15,40 @@ const SidebarExp = () => {
         id="sidebar"
         className={`${
           open ? "w-32" : "w-12"
-        } border-r-2 border-r-secondary-color h-full transition-width ease-in-out duration-300 overflow-hidden`}
+        } bg-bg-color absolute border-r-2 border-r-secondary-color h-full transition-width ease-in-out duration-300 overflow-hidden px-2.5 z-20`}
       >
-        <div className="text-text-color flex items-center justify-center py-12 flex-col gap-8 w-full">
+        <div className="text-text-color flex items-center justify-center py-12 flex-col gap-2 w-full">
           <div
-            className={`p-1 cursor-pointer flex gap-4 justify-start w-full px-2`}
+            className={`hover:px-1 cursor-pointer flex gap-4 justify-start w-full py-2 rounded hover:bg-secondary-color transition-all ease-in-out duration-300`}
           >
-            <HomeIcon className="cursor-pointer" />
-            <span className="ml-2">Home</span>
+            <HomeIcon />
+            <span>Home</span>
           </div>
 
           <div
-            className={`p-1 cursor-pointer flex gap-4 px-2 justify-start w-full`}
+            className={`hover:px-1 cursor-pointer flex gap-4 justify-start w-full py-2 rounded hover:bg-secondary-color transition-all ease-in-out duration-300`}
           >
-            <BotIcon className="cursor-pointer" />
-            <span className="ml-2">Bot</span>
+            <BotIcon />
+            <span>Bot</span>
           </div>
 
           <div
-            className={`p-1 cursor-pointer flex gap-4 px-2 justify-start w-full`}
+            className={`hover:px-1 cursor-pointer flex gap-4 justify-start w-full py-2 rounded hover:bg-secondary-color transition-all ease-in-out duration-300`}
           >
-            <ServerArchiveIcon className="cursor-pointer" />
-            <span className="ml-2">Servers</span>
+            <ServerArchiveIcon />
+            <span>Servers</span>
           </div>
         </div>
+      </div>
+
+      <div className="absolute left-12 top-0 h-full w-[calc(100%-3rem)]">
+        {children}
       </div>
     </div>
   )
 }
 
-export default SidebarExp
+export default SidebarWrapper
 
 const HomeIcon = (props: any) => {
   return (
