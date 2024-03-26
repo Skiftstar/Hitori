@@ -1,5 +1,6 @@
 import {
   ChannelType,
+  Guild,
   GuildBasedChannel,
   GuildMember,
   Message,
@@ -18,6 +19,7 @@ import {
   MediaInfo,
   MessageInfo,
   SERVER_ARCHIVE_FOLDER_NAME,
+  ServerInfo,
   ThreadInfo,
   UserInfo,
 } from "./archiveTypes"
@@ -26,6 +28,7 @@ import {
   insertChannels,
   insertMedia,
   insertMessages,
+  insertServerInfo,
   insertThreads,
   insertUsers,
 } from "./archiveDBUtil"
@@ -58,6 +61,7 @@ export const archiveServer = async (guildId: string) => {
     throw new Error(`Error while creating database: ${error}`)
   })
 
+  await archiveServerInfo(guild, dbName)
   await archiveCategories(categories, dbName)
   await archiveChannels(textChannels, dbName)
   await archiveUsers(users, dbName)
@@ -74,6 +78,21 @@ export const archiveServer = async (guildId: string) => {
     })
   )
   await archiveThreads(threads as ThreadChannel[], dbName)
+}
+
+const archiveServerInfo = async (guild: Guild, dbName: string) => {
+  const iconData = await downloadMedia(
+    guild.iconURL({ size: 1024, forceStatic: false }) || null
+  )
+
+  const serverInfo: ServerInfo = {
+    id: guild.id,
+    serverName: guild.name,
+    serverIconURL: guild.iconURL() || "",
+    serverIconData: iconData,
+  }
+
+  await insertServerInfo(serverInfo, dbName)
 }
 
 const archiveThreads = async (threads: ThreadChannel[], dbName: string) => {

@@ -41,4 +41,11 @@ export type ThreadInfo = {
   channelId: string | null
 }
 
+export type ServerInfo = {
+  id: string
+  serverName: string
+  serverIconURL: string
+  serverIconData: any
+}
+
 export const SERVER_ARCHIVE_FOLDER_NAME = "Archived-Servers"

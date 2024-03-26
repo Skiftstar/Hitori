@@ -1,4 +1,4 @@
-import { ChakraProvider, useEditable } from "@chakra-ui/react"
+import { ChakraProvider } from "@chakra-ui/react"
 import "./App.css"
 import SidebarWrapper from "./components/SidebarWrapper"
 import { useState } from "react"

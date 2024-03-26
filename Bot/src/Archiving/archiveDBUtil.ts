@@ -5,6 +5,7 @@ import {
   ChannelInfo,
   MediaInfo,
   MessageInfo,
+  ServerInfo,
   ThreadInfo,
   UserInfo,
 } from "./archiveTypes"
@@ -130,6 +131,28 @@ export const insertThreads = async (threads: ThreadInfo[], dbName: string) => {
       [thread.name, thread.id, thread.channelId]
     )
   })
+
+  db.close()
+}
+
+export const insertServerInfo = async (
+  serverInfo: ServerInfo,
+  dbName: string
+) => {
+  const db = await open({
+    filename: dbName,
+    driver: Database,
+  })
+
+  db.run(
+    "INSERT OR IGNORE INTO ServerInformation (id, serverName, serverIconURL, serverIconData) VALUES (?, ?, ?, ?)",
+    [
+      serverInfo.id,
+      serverInfo.serverName,
+      serverInfo.serverIconURL,
+      serverInfo.serverIconData,
+    ]
+  )
 
   db.close()
 }

@@ -19,6 +19,7 @@ module.exports = {
       })
       .catch((error) => {
         interaction.editReply(`Error while archiving server: ${error}`)
+        console.log(error)
       })
   },
 }
