@@ -14,6 +14,7 @@
     "@types/react": "^18.2.70",
     "@types/react-dom": "^18.2.22",
     "framer-motion": "^11.0.20",
+    "lucide-react": "^0.363.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
