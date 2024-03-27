@@ -1,5 +1,5 @@
 {
-  "name": "hitori",
+  "name": "hitori-api-bot",
   "version": "1.0.0",
   "description": "A general Purpose Discord Bot with DiscordJS and Typescript",
   "main": "index.js",
