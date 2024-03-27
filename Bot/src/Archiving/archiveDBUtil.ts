@@ -145,7 +145,7 @@ export const insertServerInfo = async (
   })
 
   db.run(
-    "INSERT OR IGNORE INTO ServerInformation (id, serverName, serverIconURL, serverIconData) VALUES (?, ?, ?, ?)",
+    "INSERT OR IGNORE INTO Servers (id, serverName, serverIconURL, serverIconData) VALUES (?, ?, ?, ?)",
     [
       serverInfo.id,
       serverInfo.serverName,

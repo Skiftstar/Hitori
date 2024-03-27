@@ -48,4 +48,4 @@ export type ServerInfo = {
   serverIconData: any
 }
 
-export const SERVER_ARCHIVE_FOLDER_NAME = "Archived-Servers"
+export const SERVER_ARCHIVE_FOLDER_NAME = "Archiving"

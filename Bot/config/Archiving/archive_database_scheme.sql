@@ -47,11 +47,3 @@ CREATE TABLE Media (
     data BLOB,
     FOREIGN KEY(messageID) REFERENCES Messages(id)
 );
-
-CREATE TABLE ServerInformation (
-    id INTEGER PRIMARY KEY,
-    serverName TEXT NOT NULL,
-    serverIconURL TEXT,
-    serverIconData BLOB,
-    UNIQUE(id)
-);

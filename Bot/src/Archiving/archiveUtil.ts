@@ -52,8 +52,10 @@ export const archiveServer = async (guildId: string) => {
 
   const users = getUsersOfGuild(guildId)
 
-  const dbName = `${SERVER_ARCHIVE_FOLDER_NAME}/${guild.name}-${guild.id}.db`
+  const dbName = `${SERVER_ARCHIVE_FOLDER_NAME}/Archived-Servers/${guild.name}-${guild.id}.db`
+  const serverListDBName = `${SERVER_ARCHIVE_FOLDER_NAME}/servers.db`
 
+  // Create DB for Server
   await createDatabase(
     dbName,
     "./config/Archiving/archive_database_scheme.sql"
@@ -61,7 +63,15 @@ export const archiveServer = async (guildId: string) => {
     throw new Error(`Error while creating database: ${error}`)
   })
 
-  await archiveServerInfo(guild, dbName)
+  // Create DB for Server List if not exists
+  await createDatabase(
+    serverListDBName,
+    "./config/Archiving/archive_server_listdatabase_scheme.sql"
+  ).catch((error) => {
+    throw new Error(`Error while creating database: ${error}`)
+  })
+
+  await archiveServerInfo(guild, serverListDBName)
   await archiveCategories(categories, dbName)
   await archiveChannels(textChannels, dbName)
   await archiveUsers(users, dbName)
