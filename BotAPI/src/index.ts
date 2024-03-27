@@ -5,13 +5,30 @@ import { getConfigValue } from "./Config/config"
 import { BotClient } from "./DiscordBot/botClient"
 import { REST, Routes } from "discord.js"
 import { sendError, startBot } from "./DiscordBot/bot"
+import express from "express"
+import cors from "cors"
 
-export const client = new BotClient({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent] })
+const apiPort = getConfigValue("apiPort")
+export const apiApp = express()
+apiApp.use(cors())
+
+apiApp.listen(apiPort, () => {
+  console.log(`API Server is running at http://localhost:${apiPort}`)
+})
+
+export const client = new BotClient({
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent],
+})
 
 const commandFolder = path.join(__dirname, "Commands")
 const commandFiles = readdirSync(commandFolder)
 client.commands = new Collection()
 const commands: any[] = []
+
+readdirSync(path.join(__dirname, "API/routes")).forEach((file: any) => {
+  const route = require(`./API/routes/${file}`)
+  apiApp.use(route)
+})
 
 for (const file of commandFiles) {
   const command = require(`./Commands/${file}`)

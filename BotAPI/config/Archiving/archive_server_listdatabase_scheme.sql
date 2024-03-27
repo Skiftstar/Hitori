@@ -3,5 +3,8 @@ CREATE TABLE Servers (
     serverName TEXT NOT NULL,
     serverIconURL TEXT,
     serverIconData BLOB,
+    created TIMESTAMP DEFAULT NULL,
+    archived TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(id)
 );

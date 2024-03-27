@@ -144,15 +144,31 @@ export const insertServerInfo = async (
     driver: Database,
   })
 
-  db.run(
-    "INSERT OR IGNORE INTO Servers (id, serverName, serverIconURL, serverIconData) VALUES (?, ?, ?, ?)",
+  await db.run(
+    `INSERT INTO Servers (id, serverName, serverIconURL, serverIconData, created) 
+     VALUES (?, ?, ?, ?, ?) 
+     ON CONFLICT(id) DO UPDATE SET updated = CURRENT_TIMESTAMP`,
     [
       serverInfo.id,
       serverInfo.serverName,
       serverInfo.serverIconURL,
       serverInfo.serverIconData,
+      serverInfo.created,
     ]
   )
 
+  await db.close()
+}
+
+export const getArchivedServers = async (dbName: string) => {
+  const db = await open({
+    filename: dbName,
+    driver: Database,
+  })
+
+  const servers = await db.all("SELECT * FROM Servers")
+
   db.close()
+
+  return servers
 }

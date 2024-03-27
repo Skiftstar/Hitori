@@ -46,6 +46,8 @@ export type ServerInfo = {
   serverName: string
   serverIconURL: string
   serverIconData: any
+  created: string
 }
 
 export const SERVER_ARCHIVE_FOLDER_NAME = "Archiving"
+export const SERVER_LIST_DB_NAME = `${SERVER_ARCHIVE_FOLDER_NAME}/servers.db`

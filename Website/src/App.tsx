@@ -3,6 +3,7 @@ import "./App.css"
 import SidebarWrapper from "./components/SidebarWrapper"
 import { useState } from "react"
 import { Page } from "./types"
+import ServerOverview from "./ServerView/ServerOverview"
 
 function App() {
   const pages: Page[] = [
@@ -29,7 +30,7 @@ function App() {
       icon: <ServerArchiveIcon />,
       content: (
         <div>
-          <span className="text-text-color">Servers</span>
+          <ServerOverview />
         </div>
       ),
     },
