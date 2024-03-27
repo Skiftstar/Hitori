@@ -10,28 +10,31 @@ const ServerOverview = () => {
     const fetchEntries = async () => {
       const data = await getArchivedServers() // Replace this with your function to fetch entries
       setEntries(data)
-      console.log(data)
     }
-    console.log("fetching entries")
 
     fetchEntries()
   }, [])
+
+  const columns = ["ID", "Icon", "Name", "Created", "Archived", "Updated"]
 
   return (
     <Table variant="simple">
       <Thead>
         <Tr>
-          <Th>Column 1</Th>
-          <Th>Column 2</Th>
-          {/* Add more <Th> elements here for additional columns */}
+          {columns.map((column, index) => (
+            <Th key={index}>{column}</Th>
+          ))}
         </Tr>
       </Thead>
       <Tbody className="text-text-color">
         {entries.map((entry, index) => (
           <Tr key={index}>
-            <Td>{entry.serverName}</Td>
             <Td>{entry.id}</Td>
-            {/* Add more <Td> elements here for additional columns */}
+            <Td></Td>
+            <Td>{entry.serverName}</Td>
+            <Td>{entry.created}</Td>
+            <Td>{entry.archived}</Td>
+            <Td>{entry.updated}</Td>
           </Tr>
         ))}
       </Tbody>

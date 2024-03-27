@@ -5,4 +5,5 @@ export type ArchivedServer = {
     serverIconData: any
     created: string
     archived: string
+    updated: string
 }

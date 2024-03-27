@@ -100,7 +100,7 @@ const archiveServerInfo = async (guild: Guild, dbName: string) => {
     serverName: guild.name,
     serverIconURL: guild.iconURL() || "",
     serverIconData: iconData,
-    created: guild.createdTimestamp.toString(),
+    created: guild.createdTimestamp,
   }
 
   await insertServerInfo(serverInfo, dbName)
