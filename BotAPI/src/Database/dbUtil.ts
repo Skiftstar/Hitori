@@ -27,6 +27,6 @@ export const createDatabase = async (dbName: string, schemaPath: string) => {
   console.log("Database created successfully")
 }
 
-const doesDatabaseExist = (dbName: string) => {
+export const doesDatabaseExist = (dbName: string) => {
   return fs.existsSync(dbName)
 }
