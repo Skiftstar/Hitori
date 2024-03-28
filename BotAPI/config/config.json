@@ -1,5 +1,6 @@
 {
   "token": "",
   "clientId": "",
+  "storeMediaLocally": true,
   "apiPort": 3001
 }
