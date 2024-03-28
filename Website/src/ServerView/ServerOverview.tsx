@@ -27,10 +27,10 @@ const ServerOverview = () => {
       } else {
         // When sorted, sort by the selected field
         if (a[sortField] < b[sortField]) {
-          return sortDirection === "asc" ? -1 : 1
+          return sortDirection === "asc" ? 1 : -1
         }
         if (a[sortField] > b[sortField]) {
-          return sortDirection === "asc" ? 1 : -1
+          return sortDirection === "asc" ? -1 : 1
         }
         return 0
       }
