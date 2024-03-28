@@ -2,7 +2,8 @@
   "name": "hitori-root",
   "version": "1.0.0",
   "scripts": {
-    "start": "concurrently \"cd BotAPI && node start.js\" \"cd Website && npm start\""
+    "start": "concurrently \"cd BotAPI && node start.js\" \"cd Website && npm start\"",
+    "install:all": "npm i && cd BotAPI && npm i && cd ../Website && npm i"
   },
   "dependencies": {
     "concurrently": "^8.2.2"
