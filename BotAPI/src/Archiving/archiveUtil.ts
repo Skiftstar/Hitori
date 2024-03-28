@@ -34,6 +34,7 @@ import {
   insertUsers,
 } from "./archiveDBUtil"
 import { get } from "https"
+import { getConfigValue } from "../Config/config"
 
 export const archiveServer = async (guildId: string) => {
   const guild = getGuild(guildId)
@@ -54,6 +55,8 @@ export const archiveServer = async (guildId: string) => {
   const users = getUsersOfGuild(guildId)
 
   const dbName = `${SERVER_ARCHIVE_FOLDER_NAME}/Archived-Servers/${guild.name}-${guild.id}.db`
+  // Wheter or not to download media for the database
+  const storeMediaLocally = getConfigValue("storeMediaLocally")
 
   // Create DB for Server
   await createDatabase(
@@ -71,29 +74,29 @@ export const archiveServer = async (guildId: string) => {
     throw new Error(`Error while creating database: ${error}`)
   })
 
-  await archiveServerInfo(guild, SERVER_LIST_DB_NAME)
+  await archiveServerInfo(guild, SERVER_LIST_DB_NAME, storeMediaLocally)
   await archiveCategories(categories, dbName)
   await archiveChannels(textChannels, dbName)
-  await archiveUsers(users, dbName)
+  await archiveUsers(users, dbName, storeMediaLocally)
 
   await Promise.all(
     textChannels.map(async (channel: GuildBasedChannel) => {
-      await archiveMessages(channel as TextChannel, dbName)
+      await archiveMessages(channel as TextChannel, dbName, storeMediaLocally)
     })
   )
 
   await Promise.all(
     threads.map(async (channel: GuildBasedChannel) => {
-      await archiveMessages(channel as ThreadChannel, dbName)
+      await archiveMessages(channel as ThreadChannel, dbName, storeMediaLocally)
     })
   )
   await archiveThreads(threads as ThreadChannel[], dbName)
 }
 
-const archiveServerInfo = async (guild: Guild, dbName: string) => {
-  const iconData = await downloadMedia(
+const archiveServerInfo = async (guild: Guild, dbName: string, storeMediaLocally: boolean) => {
+  const iconData = storeMediaLocally ? await downloadMedia(
     guild.iconURL({ size: 1024, forceStatic: false }) || null
-  )
+  ) : null
 
   const serverInfo: ServerInfo = {
     id: guild.id,
@@ -120,12 +123,12 @@ const archiveThreads = async (threads: ThreadChannel[], dbName: string) => {
   await insertThreads(threadInfos, dbName)
 }
 
-const archiveUsers = async (users: GuildMember[], dbName: string) => {
+const archiveUsers = async (users: GuildMember[], dbName: string, storeMediaLocally: boolean) => {
   const userInfos: UserInfo[] = []
 
   await Promise.all(
     users.map(async (user) => {
-      const avatarData = await downloadMedia(user.user.avatarURL() || null)
+      const avatarData = storeMediaLocally ? await downloadMedia(user.user.avatarURL() || null) : null
       userInfos.push({
         id: user.id,
         displayName: user.displayName,
@@ -175,7 +178,8 @@ const archiveChannels = async (
 
 const archiveMessages = async (
   channel: TextChannel | ThreadChannel,
-  dbName: string
+  dbName: string,
+  storeMediaLocally: boolean
 ) => {
   const messageInfos: MessageInfo[] = []
   const mediaInfos: MediaInfo[] = []
@@ -194,7 +198,7 @@ const archiveMessages = async (
       })
 
       if (message.attachments.size > 0) {
-        const media = await archiveMedia(message)
+        const media = await archiveMedia(message, storeMediaLocally)
         mediaInfos.push(...media)
       }
     })
@@ -204,13 +208,13 @@ const archiveMessages = async (
   await insertMedia(mediaInfos, dbName)
 }
 
-const archiveMedia = async (message: Message) => {
+const archiveMedia = async (message: Message, storeMediaLocally: boolean) => {
   const mediaInfos: MediaInfo[] = []
 
   const attachments = Array.from(message.attachments.values())
   await Promise.all(
     attachments.map(async (attachment) => {
-      const attachmentData = await downloadMedia(attachment.url)
+      const attachmentData = storeMediaLocally ? await downloadMedia(attachment.url) : null
 
       mediaInfos.push({
         id: attachment.id,
