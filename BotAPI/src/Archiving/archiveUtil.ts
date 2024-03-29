@@ -18,11 +18,11 @@ import {
   ChannelInfo,
   MediaInfo,
   MessageInfo,
-  SERVER_ARCHIVE_FOLDER_NAME,
   SERVER_LIST_DB_NAME,
   ServerInfo,
   ThreadInfo,
   UserInfo,
+  SERVER_ARCHIVE_FOLDER_NAME,
 } from "./archiveTypes"
 import {
   insertCategories,
@@ -54,7 +54,7 @@ export const archiveServer = async (guildId: string) => {
 
   const users = getUsersOfGuild(guildId)
 
-  const dbName = `${SERVER_ARCHIVE_FOLDER_NAME}/Archived-Servers/${guild.name}-${guild.id}.db`
+  const dbName = `${SERVER_ARCHIVE_FOLDER_NAME}/${guild.name}-${guild.id}.db`
   // Wheter or not to download media for the database
   const storeMediaLocally = getConfigValue("storeMediaLocally")
 

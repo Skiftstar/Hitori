@@ -10,6 +10,7 @@ import {
   UserInfo,
 } from "./archiveTypes"
 import { doesDatabaseExist } from "../Database/dbUtil"
+import { GuildChannel } from "discord.js"
 
 export const insertCategories = async (
   categories: CategoryInfo[],
@@ -176,6 +177,40 @@ export const getArchivedServers = async (dbName: string) => {
   db.close()
 
   return servers
+}
+
+export const getServerCategoryChannels = async (dbName: string) => {
+  const response = {
+    withCategory: {},
+    withoutCategory: [],
+  }
+
+  if (!doesDatabaseExist(dbName)) return response
+
+  const db = await open({
+    filename: dbName,
+    driver: Database,
+  })
+
+  const categories = await db.all("SELECT * FROM categories")
+  const channels = await db.all("SELECT * FROM channels")
+  db.close()
+
+  const categoryChannels: {[categoryId: string]: GuildChannel[]} = {}
+  categories.forEach((category) => {
+    const channelsForCategory = channels.filter(
+      (channel) => channel.categoryID === category.id
+    )
+    categoryChannels[category.id] = channelsForCategory
+  })
+  const channelsWithoutCategory = channels.filter(
+    (channel) => channel.categoryID === null
+  )
+
+  return {
+    withCategory: categoryChannels,
+    withoutCategory: channelsWithoutCategory,
+  }
 }
 
 function formatDate(date: Date) {

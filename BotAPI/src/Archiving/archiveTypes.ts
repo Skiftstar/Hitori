@@ -49,5 +49,6 @@ export type ServerInfo = {
   created: number
 }
 
-export const SERVER_ARCHIVE_FOLDER_NAME = "Archiving"
-export const SERVER_LIST_DB_NAME = `${SERVER_ARCHIVE_FOLDER_NAME}/servers.db`
+export const ARCHIVE_FOLDER_NAME = "Archiving"
+export const SERVER_ARCHIVE_FOLDER_NAME = `${ARCHIVE_FOLDER_NAME}/Archived-Servers`
+export const SERVER_LIST_DB_NAME = `${ARCHIVE_FOLDER_NAME}/servers.db`
