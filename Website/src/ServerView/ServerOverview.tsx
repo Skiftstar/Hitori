@@ -3,7 +3,11 @@ import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react"
 import { getArchivedServers } from "../data"
 import { ArchivedServer } from "./types"
 
-const ServerOverview = () => {
+interface ServerOverviewProps {
+  displayServer: Function
+}
+
+const ServerOverview = ({ displayServer }: ServerOverviewProps) => {
   const [entries, setEntries] = useState<ArchivedServer[]>([])
   const [sortField, setSortField] = useState<string | null>(null)
   const [sortDirection, setSortDirection] = useState<"asc" | "desc" | "none">(
@@ -60,7 +64,11 @@ const ServerOverview = () => {
       <Thead>
         <Tr>
           {columns.map((column, index) => (
-            <Th className="select-none cursor-pointer" key={index} onClick={() => handleSort(column)}>
+            <Th
+              className="select-none cursor-pointer"
+              key={index}
+              onClick={() => handleSort(column)}
+            >
               {column}
               {sortField === column &&
                 (sortDirection === "asc"
@@ -74,7 +82,7 @@ const ServerOverview = () => {
       </Thead>
       <Tbody className="text-text-color">
         {entries.map((entry, index) => (
-          <Tr key={index} className="hover:bg-secondary-color cursor-pointer">
+          <Tr onClick={() => {displayServer(entry.id)}} key={index} className="hover:bg-secondary-color cursor-pointer">
             <Td>{entry.id}</Td>
             <Td></Td>
             <Td>{entry.serverName}</Td>

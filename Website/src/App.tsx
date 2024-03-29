@@ -4,6 +4,7 @@ import SidebarWrapper from "./components/SidebarWrapper"
 import { useState } from "react"
 import { Page } from "./types"
 import ServerOverview from "./ServerView/ServerOverview"
+import ServerDetail from "./ServerView/ServerDetail"
 
 function App() {
   const pages: Page[] = [
@@ -30,7 +31,15 @@ function App() {
       icon: <ServerArchiveIcon />,
       content: (
         <div>
-          <ServerOverview />
+          <ServerOverview
+            displayServer={(serverId: string) => {
+              setCurrentPage({
+                name: serverId,
+                icon: <ServerArchiveIcon />,
+                content: <ServerDetail serverId={serverId} />,
+              })
+            }}
+          />
         </div>
       ),
     },
