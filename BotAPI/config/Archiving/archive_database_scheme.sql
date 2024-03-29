@@ -1,24 +1,24 @@
 CREATE TABLE Categories (
-    id INTEGER PRIMARY KEY,
+    id TEXT PRIMARY KEY,
     name TEXT NOT NULL
 );
 
 CREATE TABLE Channels (
-    id INTEGER PRIMARY KEY,
-    categoryID INTEGER,
+    id TEXT PRIMARY KEY,
+    categoryID TEXT,
     name TEXT NOT NULL,
     FOREIGN KEY(categoryID) REFERENCES Categories(id)
 );
 
 CREATE TABLE Threads (
-    id INTEGER PRIMARY KEY,
-    channelID INTEGER,
+    id TEXT PRIMARY KEY,
+    channelID TEXT,
     name TEXT NOT NULL,
     FOREIGN KEY(channelID) REFERENCES Channels(id)
 );
 
 CREATE TABLE Users (
-    id INTEGER PRIMARY KEY,
+    id TEXT PRIMARY KEY,
     username TEXT NOT NULL,
     displayName TEXT NOT NULL,
     discriminator INTEGER,
@@ -28,10 +28,10 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE Messages (
-    id INTEGER PRIMARY KEY,
-    userID INTEGER,
-    channelID INTEGER,
-    threadID INTEGER,
+    id TEXT PRIMARY KEY,
+    userID TEXT,
+    channelID TEXT,
+    threadID TEXT,
     content TEXT,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(userID) REFERENCES Users(id),
@@ -40,8 +40,8 @@ CREATE TABLE Messages (
 );
 
 CREATE TABLE Media (
-    id INTEGER PRIMARY KEY,
-    messageID INTEGER,
+    id TEXT PRIMARY KEY,
+    messageID TEXT,
     url TEXT,
     type TEXT,
     data BLOB,

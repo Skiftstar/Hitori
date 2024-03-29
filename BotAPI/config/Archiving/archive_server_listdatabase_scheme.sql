@@ -1,5 +1,5 @@
 CREATE TABLE Servers (
-    id INTEGER PRIMARY KEY,
+    id TEXT PRIMARY KEY,
     serverName TEXT NOT NULL,
     serverIconURL TEXT,
     serverIconData BLOB,
