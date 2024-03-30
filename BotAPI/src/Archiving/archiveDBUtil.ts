@@ -62,13 +62,14 @@ export const insertMessages = async (
 
   messages.forEach((message) => {
     db.run(
-      "INSERT OR IGNORE INTO messages (content, id, channelId, threadId, userId, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
+      "INSERT OR IGNORE INTO messages (content, id, channelId, threadId, userId, hasMedia, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)",
       [
         message.content,
         message.id,
         message.channelId,
         message.threadId,
         message.userId,
+        message.hasMedia,
         message.timestamp,
       ]
     )
@@ -210,7 +211,7 @@ export const getServerCategoryChannels = async (dbName: string) => {
 
   return {
     categories,
-    channelsWithoutCategory
+    channelsWithoutCategory,
   }
 }
 
@@ -227,6 +228,24 @@ export const getServerUsers = async (dbName: string) => {
   db.close()
 
   return users
+}
+
+export const getChannelMessages = async (dbName: string, channelId: string) => {
+  if (!doesDatabaseExist(dbName)) return []
+
+  const db = await open({
+    filename: dbName,
+    driver: Database,
+  })
+
+  const messages = await db.all(
+    "SELECT * FROM messages WHERE channelId = ? ORDER BY timestamp ASC",
+    channelId
+  )
+
+  db.close()
+
+  return messages
 }
 
 export const getServerDBName = (server: ServerInfo) => {

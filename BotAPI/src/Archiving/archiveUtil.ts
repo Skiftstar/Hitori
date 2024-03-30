@@ -194,6 +194,7 @@ const archiveMessages = async (
         channelId: message.channel.id,
         threadId: message.channel.isThread() ? message.channel.id : null,
         userId: message.author.id,
+        hasMedia: message.attachments.size > 0,
         timestamp: message.createdTimestamp,
       })
 

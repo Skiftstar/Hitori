@@ -34,6 +34,7 @@ CREATE TABLE Messages (
     threadID TEXT,
     content TEXT,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    hasMedia BOOLEAN DEFAULT FALSE,
     FOREIGN KEY(userID) REFERENCES Users(id),
     FOREIGN KEY(channelID) REFERENCES Channels(id),
     FOREIGN KEY(threadID) REFERENCES Threads(id)
