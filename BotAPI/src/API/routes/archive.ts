@@ -2,6 +2,8 @@ import express from "express"
 import {
   getArchivedServers,
   getServerCategoryChannels,
+  getServerDBName,
+  getServerUsers,
 } from "../../Archiving/archiveDBUtil"
 import { SERVER_ARCHIVE_FOLDER_NAME, SERVER_LIST_DB_NAME } from "../../Archiving/archiveTypes"
 const router = express.Router()
@@ -18,11 +20,23 @@ router.get("/archive/servers/:id", async (req, res) => {
 
   const server = servers.find((server) => `${server.id}` === `${serverId}`)
 
-  const dbName = `${SERVER_ARCHIVE_FOLDER_NAME}/${server.serverName}-${server.id}.db`
-
-  console.log(dbName)
+  const dbName = getServerDBName(server)
 
   const serverCategoryChannels = await getServerCategoryChannels(dbName)
+
+  res.json(serverCategoryChannels)
+})
+
+router.get("/archive/servers/:id/users", async (req, res) => {
+  const serverId = req.params.id
+
+  const servers = await getArchivedServers(SERVER_LIST_DB_NAME)
+
+  const server = servers.find((server) => `${server.id}` === `${serverId}`)
+
+  const dbName = getServerDBName(server)
+
+  const serverCategoryChannels = await getServerUsers(dbName)
 
   res.json(serverCategoryChannels)
 })

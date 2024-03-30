@@ -5,6 +5,7 @@ import {
   ChannelInfo,
   MediaInfo,
   MessageInfo,
+  SERVER_ARCHIVE_FOLDER_NAME,
   ServerInfo,
   ThreadInfo,
   UserInfo,
@@ -196,21 +197,40 @@ export const getServerCategoryChannels = async (dbName: string) => {
   const channels = await db.all("SELECT * FROM channels")
   db.close()
 
-  const categoryChannels: {[categoryId: string]: GuildChannel[]} = {}
+  const categoryChannels: { [categoryId: string]: GuildChannel[] } = {}
   categories.forEach((category) => {
     const channelsForCategory = channels.filter(
       (channel) => channel.categoryID === category.id
     )
-    categoryChannels[category.id] = channelsForCategory
+    category.channels = channelsForCategory
   })
   const channelsWithoutCategory = channels.filter(
     (channel) => channel.categoryID === null
   )
 
   return {
-    withCategory: categoryChannels,
-    withoutCategory: channelsWithoutCategory,
+    categories,
+    channelsWithoutCategory
   }
+}
+
+export const getServerUsers = async (dbName: string) => {
+  if (!doesDatabaseExist(dbName)) return []
+
+  const db = await open({
+    filename: dbName,
+    driver: Database,
+  })
+
+  const users = await db.all("SELECT * FROM users")
+
+  db.close()
+
+  return users
+}
+
+export const getServerDBName = (server: ServerInfo) => {
+  return `${SERVER_ARCHIVE_FOLDER_NAME}/${server.serverName}-${server.id}.db`
 }
 
 function formatDate(date: Date) {
