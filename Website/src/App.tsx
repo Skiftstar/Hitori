@@ -5,6 +5,7 @@ import { useState } from "react"
 import { Page } from "./types"
 import ServerOverview from "./ServerView/ServerOverview"
 import ServerDetail from "./ServerView/ServerDetail"
+import { ArchivedServer } from "./ServerView/types"
 
 function App() {
   const pages: Page[] = [
@@ -32,11 +33,11 @@ function App() {
       content: (
         <div>
           <ServerOverview
-            displayServer={(serverId: string) => {
+            displayServer={(server: ArchivedServer) => {
               setCurrentPage({
-                name: serverId,
+                name: server.id,
                 icon: <ServerArchiveIcon />,
-                content: <ServerDetail serverId={serverId} />,
+                content: <ServerDetail server={server} />,
               })
             }}
           />
@@ -49,7 +50,7 @@ function App() {
 
   return (
     <ChakraProvider>
-      <body className="absolute h-[100%] w-full bg-bg-color">
+      <body className="absolute h-[100%] w-full bg-bg-color text-text-color text-normal">
         <SidebarWrapper pages={pages} setPage={setCurrentPage}>
           {currentPage.content}
         </SidebarWrapper>

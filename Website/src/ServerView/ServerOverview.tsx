@@ -40,6 +40,7 @@ const ServerOverview = ({ displayServer }: ServerOverviewProps) => {
       }
     })
     setEntries(sortedEntries)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortField, sortDirection])
 
   const columns = ["id", "icon", "serverName", "created", "archived", "updated"]
@@ -82,7 +83,13 @@ const ServerOverview = ({ displayServer }: ServerOverviewProps) => {
       </Thead>
       <Tbody className="text-text-color">
         {entries.map((entry, index) => (
-          <Tr onClick={() => {displayServer(entry.id)}} key={index} className="hover:bg-secondary-color cursor-pointer">
+          <Tr
+            onClick={() => {
+              displayServer(entry)
+            }}
+            key={index}
+            className="hover:bg-secondary-color cursor-pointer"
+          >
             <Td>{entry.id}</Td>
             <Td></Td>
             <Td>{entry.serverName}</Td>
