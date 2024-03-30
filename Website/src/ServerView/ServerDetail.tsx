@@ -23,7 +23,9 @@ const ServerDetail = ({ server }: ServerDetailProps) => {
   const [data, setData] = useState<ServerCategoryChannelResponse | null>(null)
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
+  const [displayedMessages, setDisplayedMessages] = useState<Message[]>([])
   const [users, setUsers] = useState<UserMap>({})
+  const [search, setSearch] = useState("")
 
   useEffect(() => {
     const fetchEntries = async () => {
@@ -32,6 +34,8 @@ const ServerDetail = ({ server }: ServerDetailProps) => {
         selectedChannel?.id || ""
       )
       setMessages(messages)
+      setDisplayedMessages(messages)
+      setSearch("")
     }
 
     fetchEntries()
@@ -50,6 +54,19 @@ const ServerDetail = ({ server }: ServerDetailProps) => {
     fetchEntries()
   }, [server])
 
+  useEffect(() => {
+    if (search === "") {
+      setDisplayedMessages(messages)
+      return
+    }
+
+    const filteredMessages = messages.filter((message) =>
+      message.content.toLowerCase().includes(search.toLowerCase())
+    )
+
+    setDisplayedMessages(filteredMessages)
+  }, [search, messages])
+
   return (
     <div className="h-full">
       {data && (
@@ -62,8 +79,8 @@ const ServerDetail = ({ server }: ServerDetailProps) => {
             selectedChannel={selectedChannel}
           />
           <div className="w-full flex-grow">
-            <MessageDisplay messages={messages} users={users} />
-            <SearchBar />
+            <MessageDisplay messages={displayedMessages} users={users} />
+            <SearchBar setSearch={setSearch} search={search} />
           </div>
         </div>
       )}
