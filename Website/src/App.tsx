@@ -6,6 +6,7 @@ import { Page } from "./types"
 import ServerOverview from "./ServerView/ServerOverview"
 import ServerDetail from "./ServerView/ServerDetail"
 import { ArchivedServer } from "./ServerView/types"
+import { Global, css } from "@emotion/react"
 
 function App() {
   const pages: Page[] = [
@@ -50,6 +51,13 @@ function App() {
 
   return (
     <ChakraProvider>
+      <Global
+        styles={css`
+          html {
+            background-color: #201e2b;
+          }
+        `}
+      />
       <body className="absolute h-[100%] w-full bg-bg-color text-text-color text-normal">
         <SidebarWrapper pages={pages} setPage={setCurrentPage}>
           {currentPage.content}

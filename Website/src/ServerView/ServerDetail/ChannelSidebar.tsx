@@ -6,16 +6,22 @@ interface ChannelSidebarProps {
   channelCategories: ServerCategoryChannelResponse
   setSelectedChannel: Function
   selectedChannel: ChannelType | null
+  className?: string
 }
 
 const ChannelSidebar = ({
   serverName,
   channelCategories,
   setSelectedChannel,
-  selectedChannel
+  selectedChannel,
+  className,
 }: ChannelSidebarProps) => {
   return (
-    <div className="h-full border-r-2 border-secondary-color w-fit pr-2">
+    <div
+      className={`h-full border-r-2 border-secondary-color w-fit pr-2 ${
+        className ?? ""
+      }`}
+    >
       <div className="p-2">
         <div className="text-xl pb-4">{serverName}</div>
 

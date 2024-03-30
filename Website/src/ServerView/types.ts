@@ -15,12 +15,35 @@ export type Channel = {
 }
 
 export type Category = {
-    id: string
-    name: string
-    channels: Channel[]
+  id: string
+  name: string
+  channels: Channel[]
 }
 
 export type ServerCategoryChannelResponse = {
-    categories: Category[]
-    channelsWithoutCategory: Channel[]
+  categories: Category[]
+  channelsWithoutCategory: Channel[]
+}
+
+export type Message = {
+  id: string
+  content: string
+  channelID: string
+  threadID: string
+  userID: string
+  hasMedia: boolean
+  timestamp: number
+}
+
+export type User = {
+  id: string
+  displayName: string
+  username: string
+  discriminator: string
+  avatarURL: string
+  avatarData: any
+}
+
+export type UserMap = {
+  [userId: string]: User
 }

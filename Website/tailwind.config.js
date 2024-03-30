@@ -14,6 +14,7 @@ module.exports = {
         'width': 'width'
       },
       fontSize: {
+        'small': '0.75rem', // 12px
         'normal': '1rem', // 16px
         'large': '1.25rem', // 20px
         'xl': '1.5rem', // 24px
