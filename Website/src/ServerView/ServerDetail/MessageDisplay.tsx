@@ -13,6 +13,8 @@ const MessageDisplay = ({ messages, users }: MessageDisplayProps) => {
     messagesEndRef.current?.scrollIntoView()
   }
 
+  const maxGap = 10 * 60 * 1000 // 10 Minutes
+
   useEffect(scrollToBottom, [messages])
 
   return (
@@ -28,7 +30,11 @@ const MessageDisplay = ({ messages, users }: MessageDisplayProps) => {
           const nextMessageTime = new Date(nextMessage?.timestamp || 0)
           const currMessageTime = new Date(message.timestamp)
 
-          const maxGap = 10 * 60 * 1000 // 10 Minutes
+          const prevMessageDate = new Date(
+            prevMessage?.timestamp || 0
+          ).toDateString()
+          const currMessageDate = new Date(message.timestamp).toDateString()
+          const isNewDate = prevMessageDate !== currMessageDate
 
           // We need this check to determine if this is the first message in a sequence of messages from the same user
           const nextMessageConnecting =
@@ -40,50 +46,65 @@ const MessageDisplay = ({ messages, users }: MessageDisplayProps) => {
             currMessageTime.getTime() - prevMessageTime.getTime() <= maxGap
 
           return (
-            <div
-              key={message.id}
-              className={`flex flex-row p-2 ${
-                connectingMessage && "pt-0 pb-0 pl-12"
-              } ${
-                nextMessageConnecting && "pb-0"
-              } items-start gap-2 hover:bg-secondary-color/20`}
-            >
-              {!connectingMessage && (
-                <img
-                  src={user?.avatarURL}
-                  alt=""
-                  className="w-8 h-8 rounded-full"
-                />
-              )}
-
-              <div className="flex flex-col">
-                <div className="text-gray-500 flex flex-row gap-2 items-center">
-                  {!connectingMessage && (
-                    <div className="text-gray-500 flex flex-row gap-2 items-center">
-                      <div className="text-white">{user?.displayName}</div>
-                    </div>
-                  )}
-                  {!connectingMessage && (
-                    <div className="text-small">
-                      {new Date(message.timestamp).toLocaleDateString(
-                        undefined,
-                        {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        }
-                      ) +
-                        " " +
-                        new Date(message.timestamp).toLocaleTimeString(
-                          undefined,
-                          { hour: "2-digit", minute: "2-digit", hour12: true }
-                        )}
-                    </div>
-                  )}
+            <>
+              {isNewDate && (
+                <div className="date-header flex items-center mx-2">
+                  <hr className="flex-grow border-secondary-color" />
+                  <div className="mx-2 text-center text-category-color">
+                    {new Date(message.timestamp).toLocaleDateString(undefined, {
+                      month: "long",
+                      day: "2-digit",
+                      year: "numeric",
+                    })}
+                  </div>
+                  <hr className="flex-grow border-secondary-color" />
                 </div>
-                <div className="whitespace-pre-wrap">{message.content}</div>
+              )}
+              <div
+                key={message.id}
+                className={`flex flex-row p-2 mt-2 ${
+                  connectingMessage && "pt-0 mt-0 pb-0 pl-12"
+                } ${
+                  nextMessageConnecting && "pb-0"
+                } items-start gap-2 hover:bg-secondary-color/20`}
+              >
+                {!connectingMessage && (
+                  <img
+                    src={user?.avatarURL}
+                    alt=""
+                    className="w-8 h-8 rounded-full"
+                  />
+                )}
+
+                <div className="flex flex-col">
+                  <div className="text-gray-500 flex flex-row gap-2 items-center">
+                    {!connectingMessage && (
+                      <div className="text-gray-500 flex flex-row gap-2 items-center">
+                        <div className="text-white">{user?.displayName}</div>
+                      </div>
+                    )}
+                    {!connectingMessage && (
+                      <div className="text-small">
+                        {new Date(message.timestamp).toLocaleDateString(
+                          undefined,
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          }
+                        ) +
+                          " " +
+                          new Date(message.timestamp).toLocaleTimeString(
+                            undefined,
+                            { hour: "2-digit", minute: "2-digit", hour12: true }
+                          )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="whitespace-pre-wrap">{message.content}</div>
+                </div>
               </div>
-            </div>
+            </>
           )
         })}
 
