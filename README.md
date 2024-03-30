@@ -15,3 +15,17 @@ Personal Use Discord Bot with DiscordJS. Features added as I need them
 - Run `npm start` in the root dir
 - Your Bot and Express Server should be running now and the React website availabe on localhost
 - Invite the Bot to your Server and run `/archive`
+
+# Archive Search Terms
+- `from:userId` shows messages from a user with that ID
+- `from:username` shows messages from a user with that username (or display name)
+- `from:"user name" shows messages from a user with displayname (or username) useful when a user has spaces in their name
+
+`from` terms add up, meaning `from:userA from:userB` will show messages from userA AND userB
+
+Everything without a specific search term will be used to filter the messages.
+`Pumpkin Cake` will only show messages that contain "Pumpkin Cake" as a whole (not messages that contain either of those words or both words but not after one another)
+
+Keep in mind that order does not matter, meaning `Pumpkin from:"User A" Cake` and `from:"User A" Pumpkin Cake` will both show messages from User A containing "Pumpkin Cake"
+
+Searches are Case insensitive
