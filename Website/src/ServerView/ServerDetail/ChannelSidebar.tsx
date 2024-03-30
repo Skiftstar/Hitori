@@ -18,7 +18,7 @@ const ChannelSidebar = ({
 }: ChannelSidebarProps) => {
   return (
     <div
-      className={`h-full border-r-2 border-secondary-color w-fit pr-2 ${
+      className={`h-full overflow-y-scroll border-r-2 border-secondary-color w-fit pr-2 ${
         className ?? ""
       }`}
     >
