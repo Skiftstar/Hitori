@@ -19,7 +19,7 @@ Personal Use Discord Bot with DiscordJS. Features added as I need them
 # Archive Search Terms
 - `from:userId` shows messages from a user with that ID
 - `from:username` shows messages from a user with that username (or display name)
-- `from:"user name" shows messages from a user with displayname (or username) useful when a user has spaces in their name
+- `from:"user name"` shows messages from a user with displayname (or username) useful when a user has spaces in their name
 
 `from` terms add up, meaning `from:userA from:userB` will show messages from userA AND userB
 
