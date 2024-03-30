@@ -14,6 +14,7 @@ import {
 import ChannelSidebar from "./ServerDetail/ChannelSidebar"
 import MessageDisplay from "./ServerDetail/MessageDisplay"
 import SearchBar from "./ServerDetail/SearchBar"
+import { filterMessages } from "./ServerDetail/MessageSearch"
 
 interface ServerDetailProps {
   server: ArchivedServer
@@ -60,12 +61,10 @@ const ServerDetail = ({ server }: ServerDetailProps) => {
       return
     }
 
-    const filteredMessages = messages.filter((message) =>
-      message.content.toLowerCase().includes(search.toLowerCase())
-    )
+    let filteredMessages: Message[] = filterMessages(messages, users, search)
 
     setDisplayedMessages(filteredMessages)
-  }, [search, messages])
+  }, [search, messages, users])
 
   return (
     <div className="h-full">
