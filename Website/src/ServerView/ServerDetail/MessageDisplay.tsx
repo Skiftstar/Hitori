@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react"
 import { Message, UserMap } from "../types"
-import SearchBar from "./SearchBar"
 
 interface MessageDisplayProps {
   messages: Message[]
@@ -52,7 +51,7 @@ const MessageDisplay = ({ messages, users }: MessageDisplayProps) => {
               {!connectingMessage && (
                 <img
                   src={user?.avatarURL}
-                  alt="avatar"
+                  alt=""
                   className="w-8 h-8 rounded-full"
                 />
               )}

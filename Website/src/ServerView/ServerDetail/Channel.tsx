@@ -18,7 +18,7 @@ const Channel = ({
       onClick={() => setSelectedChannel(channel)}
       className={`${
         selected ? "bg-secondary-color" : ""
-      } pb-[2px] mb-[2px] hover:bg-secondary-color/50 transition ease-in-out duration-200 pl-1 rounded cursor-pointer`}
+      } pb-[2px] mb-[2px] hover:bg-secondary-color/50 transition ease-in-out duration-200 px-1 rounded cursor-pointer`}
     >
       {`# ${channel.name}`}
     </div>
