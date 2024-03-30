@@ -34,14 +34,14 @@ export const filterMessages = (
     (term) => !term.startsWith("from:") && !term.includes('from:"')
   )
 
-  const messagesFromUsers = messages.filter((message) => {
+  const messagesFromUsers = usersToFilter.length > 0 ? messages.filter((message) => {
     const user = users[message.userID]
     return (
       usersToFilter.includes(user.username.toLowerCase()) ||
       usersToFilter.includes(user.displayName.toLowerCase()) ||
       usersToFilter.includes(message.userID)
     )
-  })
+  }) : messages
 
   const filteredMessages = messagesFromUsers.filter((message) => {
     return normalWordSearch.every((term) =>
