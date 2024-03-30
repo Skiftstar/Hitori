@@ -77,7 +77,7 @@ const ServerDetail = ({ server }: ServerDetailProps) => {
             setSelectedChannel={setSelectedChannel}
             selectedChannel={selectedChannel}
           />
-          <div className="w-full flex-grow">
+          <div className="w-3/4 flex-grow">
             <MessageDisplay messages={displayedMessages} users={users} />
             <SearchBar setSearch={setSearch} search={search} />
           </div>

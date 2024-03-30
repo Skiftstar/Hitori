@@ -76,7 +76,7 @@ const MessageDisplay = ({ messages, users }: MessageDisplayProps) => {
                   />
                 )}
 
-                <div className="flex flex-col">
+                <div className="flex flex-col max-w-[calc(100%-3rem)]">
                   <div className="text-gray-500 flex flex-row gap-2 items-center">
                     {!connectingMessage && (
                       <div className="text-gray-500 flex flex-row gap-2 items-center">
