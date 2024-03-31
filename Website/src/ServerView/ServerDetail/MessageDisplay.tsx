@@ -1,12 +1,15 @@
 import { useEffect, useRef } from "react"
-import { Message, UserMap } from "../types"
+import { Message, Thread, UserMap } from "../types"
+import ThreadBanner from "./ThreadBanner"
 
 interface MessageDisplayProps {
   messages: Message[]
   users: UserMap
+  threads: Thread[]
+  setChannel: (channel: Thread | null) => void
 }
 
-const MessageDisplay = ({ messages, users }: MessageDisplayProps) => {
+const MessageDisplay = ({ messages, users, threads, setChannel }: MessageDisplayProps) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
 
   const scrollToBottom = () => {
@@ -44,6 +47,10 @@ const MessageDisplay = ({ messages, users }: MessageDisplayProps) => {
           const connectingMessage =
             prevMessage?.userID === message.userID &&
             currMessageTime.getTime() - prevMessageTime.getTime() <= maxGap
+
+          // Since a thread will have the ID of the message that started it
+          // We can check if the message started a thread by doing a simple ID match
+          const thread = threads.find((thread) => thread.id === message.id)
 
           return (
             <>
@@ -102,6 +109,7 @@ const MessageDisplay = ({ messages, users }: MessageDisplayProps) => {
                     )}
                   </div>
                   <div className="whitespace-pre-wrap">{message.content}</div>
+                  {thread && <ThreadBanner thread={thread} setChannel={setChannel} />}
                 </div>
               </div>
             </>

@@ -91,7 +91,16 @@ const ServerDetail = ({ server }: ServerDetailProps) => {
             selectedChannel={selectedChannel}
           />
           <div className="w-3/4 flex-grow">
-            <MessageDisplay messages={displayedMessages} users={users} />
+            <MessageDisplay
+              threads={
+                selectedChannel && "threads" in selectedChannel
+                  ? (selectedChannel as Channel).threads
+                  : []
+              }
+              messages={displayedMessages}
+              users={users}
+              setChannel={setSelectedChannel}
+            />
             <SearchBar setSearch={setSearch} search={search} />
           </div>
         </div>
