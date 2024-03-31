@@ -34,6 +34,8 @@ const MessageDisplay = ({
       return `${user?.displayName} added a Channel to the follow list`
     } else if (message.type === "7") {
       return `${user?.displayName} joined the Server`
+    } else if (message.type === "18") {
+      return `${user?.displayName} created Thread`
     }
   }
 
