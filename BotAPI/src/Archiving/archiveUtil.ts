@@ -6,6 +6,7 @@ import {
   Message,
   TextChannel,
   ThreadChannel,
+  User,
 } from "discord.js"
 import {
   getChannelsOfGuild,
@@ -52,7 +53,7 @@ export const archiveServer = async (guildId: string) => {
   )
   const threads = channelsOnGuild.filter((channel) => channel.isThread())
 
-  const users = getUsersOfGuild(guildId)
+  const guildMembers = getUsersOfGuild(guildId)
 
   const dbName = `${SERVER_ARCHIVE_FOLDER_NAME}/${guild.name}-${guild.id}.db`
   // Wheter or not to download media for the database
@@ -77,20 +78,34 @@ export const archiveServer = async (guildId: string) => {
   await archiveServerInfo(guild, SERVER_LIST_DB_NAME, storeMediaLocally)
   await archiveCategories(categories, dbName)
   await archiveChannels(textChannels, dbName)
-  await archiveUsers(users, dbName, storeMediaLocally)
+
+  // Users that left the server but still have messages in it
+  const leftUsers: Set<User> = new Set()
 
   await Promise.all(
     textChannels.map(async (channel: GuildBasedChannel) => {
-      await archiveMessages(channel as TextChannel, dbName, storeMediaLocally)
+      await archiveMessages(
+        channel as TextChannel,
+        dbName,
+        storeMediaLocally,
+        leftUsers
+      )
     })
   )
 
   await Promise.all(
     threads.map(async (channel: GuildBasedChannel) => {
-      await archiveMessages(channel as ThreadChannel, dbName, storeMediaLocally)
+      await archiveMessages(
+        channel as ThreadChannel,
+        dbName,
+        storeMediaLocally,
+        leftUsers
+      )
     })
   )
   await archiveThreads(threads as ThreadChannel[], dbName)
+  await archiveUsers(guildMembers, dbName, storeMediaLocally)
+  await archiveLeftUsers(Array.from(leftUsers), dbName, storeMediaLocally)
 }
 
 const archiveServerInfo = async (
@@ -155,6 +170,34 @@ const archiveUsers = async (
   await insertUsers(userInfos, dbName)
 }
 
+const archiveLeftUsers = async (
+  users: User[],
+  dbName: string,
+  storeMediaLocally: boolean
+) => {
+  const userInfos: UserInfo[] = []
+
+  console.log(users)
+
+  await Promise.all(
+    users.map(async (user: User) => {
+      const avatarData = storeMediaLocally
+        ? await downloadMedia(user.avatarURL() || null)
+        : null
+      userInfos.push({
+        id: user.id,
+        displayName: user.username,
+        username: user.username,
+        discriminator: user.discriminator,
+        avatarURL: user.avatarURL() || "",
+        avatarData: avatarData,
+      })
+    })
+  )
+
+  await insertUsers(userInfos, dbName)
+}
+
 const archiveCategories = async (
   categories: GuildBasedChannel[],
   dbName: string
@@ -191,7 +234,8 @@ const archiveChannels = async (
 const archiveMessages = async (
   channel: TextChannel | ThreadChannel,
   dbName: string,
-  storeMediaLocally: boolean
+  storeMediaLocally: boolean,
+  users: Set<User>
 ) => {
   const messageInfos: MessageInfo[] = []
   const mediaInfos: MediaInfo[] = []
@@ -200,6 +244,9 @@ const archiveMessages = async (
 
   await Promise.all(
     messages.map(async (message) => {
+      if (![...users].some((existingUser) => existingUser.id === message.author.id)) {
+        users.add(message.author)
+      }
       messageInfos.push({
         content: message.content,
         id: message.id,
