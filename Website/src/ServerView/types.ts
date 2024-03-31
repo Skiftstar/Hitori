@@ -40,6 +40,9 @@ export type Message = {
   userID: string
   hasMedia: boolean
   timestamp: number
+  type: string
+  isSystemMessage: boolean
+  isPinned: boolean
 }
 
 export type User = {

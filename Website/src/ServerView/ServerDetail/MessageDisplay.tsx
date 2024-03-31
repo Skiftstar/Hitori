@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import { Message, Thread, UserMap } from "../types"
+import { Message, Thread, User, UserMap } from "../types"
 import ThreadBanner from "./ThreadBanner"
 
 interface MessageDisplayProps {
@@ -9,7 +9,12 @@ interface MessageDisplayProps {
   setChannel: (channel: Thread | null) => void
 }
 
-const MessageDisplay = ({ messages, users, threads, setChannel }: MessageDisplayProps) => {
+const MessageDisplay = ({
+  messages,
+  users,
+  threads,
+  setChannel,
+}: MessageDisplayProps) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
 
   const scrollToBottom = () => {
@@ -19,6 +24,16 @@ const MessageDisplay = ({ messages, users, threads, setChannel }: MessageDisplay
   const maxGap = 10 * 60 * 1000 // 10 Minutes
 
   useEffect(scrollToBottom, [messages])
+
+  const systemMessageInfo = (message: Message, user: User | undefined) => {
+    if (message.type === "6") {
+      return `${user?.displayName} pinned a message`
+    } else if (message.type === "4") {
+      return `${user?.displayName} changed the channel name to`
+    } else if (message.type === "12") {
+      return `${user?.displayName} added a Channel to the follow list`
+    }
+  }
 
   return (
     <div className="flex-1 h-[calc(100%-4rem)] overflow-y-auto pt-2 mb-2 w-full">
@@ -75,7 +90,7 @@ const MessageDisplay = ({ messages, users, threads, setChannel }: MessageDisplay
                   nextMessageConnecting && "!pb-0"
                 } items-start gap-2 hover:bg-secondary-color/20`}
               >
-                {!connectingMessage && (
+                {!connectingMessage && !message.isSystemMessage && (
                   <img
                     src={user?.avatarURL}
                     alt=""
@@ -85,11 +100,16 @@ const MessageDisplay = ({ messages, users, threads, setChannel }: MessageDisplay
 
                 <div className="flex flex-col max-w-[calc(100%-3rem)]">
                   <div className="text-gray-500 flex flex-row gap-2 items-center">
-                    {!connectingMessage && (
+                    {!connectingMessage && !message.isSystemMessage && (
                       <div className="text-gray-500 flex flex-row gap-2 items-center">
                         <div className="text-white">{user?.displayName}</div>
                       </div>
                     )}
+                    {message.isSystemMessage ? (
+                      <div className="text-white">
+                        {systemMessageInfo(message, user)}
+                      </div>
+                    ) : null}
                     {!connectingMessage && (
                       <div className="text-small">
                         {new Date(message.timestamp).toLocaleDateString(
@@ -109,7 +129,9 @@ const MessageDisplay = ({ messages, users, threads, setChannel }: MessageDisplay
                     )}
                   </div>
                   <div className="whitespace-pre-wrap">{message.content}</div>
-                  {thread && <ThreadBanner thread={thread} setChannel={setChannel} />}
+                  {thread && (
+                    <ThreadBanner thread={thread} setChannel={setChannel} />
+                  )}
                 </div>
               </div>
             </>
