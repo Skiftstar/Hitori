@@ -1,5 +1,7 @@
 import {
   ChannelType,
+  Collection,
+  DiscordAPIError,
   Guild,
   GuildBasedChannel,
   GuildMember,
@@ -240,11 +242,46 @@ const archiveMessages = async (
   const messageInfos: MessageInfo[] = []
   const mediaInfos: MediaInfo[] = []
 
-  const messages = await channel.messages.fetch()
+  let allMessages: Message[] = []
+  let lastId
+
+  while (true) {
+    try {
+      const options: any = { limit: 100 }
+      if (lastId) {
+        options.before = lastId
+      }
+
+      const messages: any = await channel.messages.fetch(options)
+
+      allMessages = allMessages.concat(Array.from(messages.values()))
+      const lastMessage = messages.last()
+
+      if (messages.size !== 100 || !lastMessage) {
+        break
+      }
+
+      lastId = lastMessage.id
+      //TODO: This needs hard testing, currently not working probably
+    } catch (error) {
+      if (error instanceof DiscordAPIError && error.code === 429) {
+        // Wait for the duration of the rate limit
+        const discordError = error as DiscordAPIError
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+      } else {
+        // If it's not a rate limit error, rethrow it
+        throw error
+      }
+    }
+  }
 
   await Promise.all(
-    messages.map(async (message) => {
-      if (![...users].some((existingUser) => existingUser.id === message.author.id)) {
+    allMessages.map(async (message) => {
+      if (
+        ![...users].some(
+          (existingUser) => existingUser.id === message.author.id
+        )
+      ) {
         users.add(message.author)
       }
       messageInfos.push({
