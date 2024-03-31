@@ -17,6 +17,9 @@ export type MessageInfo = {
   userId: string
   hasMedia: boolean
   timestamp: number
+  pinned: boolean
+  type: string
+  systemMessage: boolean
 }
 
 export type MediaInfo = {

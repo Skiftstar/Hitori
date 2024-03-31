@@ -62,7 +62,7 @@ export const insertMessages = async (
 
   messages.forEach((message) => {
     db.run(
-      "INSERT OR IGNORE INTO messages (content, id, channelId, threadId, userId, hasMedia, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      "INSERT OR IGNORE INTO messages (content, id, channelId, threadId, userId, hasMedia, timestamp, isPinned, type, isSystemMessage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         message.content,
         message.id,
@@ -71,6 +71,9 @@ export const insertMessages = async (
         message.userId,
         message.hasMedia,
         message.timestamp,
+        message.pinned,
+        message.type,
+        message.systemMessage
       ]
     )
   })

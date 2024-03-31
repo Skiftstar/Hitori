@@ -93,10 +93,16 @@ export const archiveServer = async (guildId: string) => {
   await archiveThreads(threads as ThreadChannel[], dbName)
 }
 
-const archiveServerInfo = async (guild: Guild, dbName: string, storeMediaLocally: boolean) => {
-  const iconData = storeMediaLocally ? await downloadMedia(
-    guild.iconURL({ size: 1024, forceStatic: false }) || null
-  ) : null
+const archiveServerInfo = async (
+  guild: Guild,
+  dbName: string,
+  storeMediaLocally: boolean
+) => {
+  const iconData = storeMediaLocally
+    ? await downloadMedia(
+        guild.iconURL({ size: 1024, forceStatic: false }) || null
+      )
+    : null
 
   const serverInfo: ServerInfo = {
     id: guild.id,
@@ -123,12 +129,18 @@ const archiveThreads = async (threads: ThreadChannel[], dbName: string) => {
   await insertThreads(threadInfos, dbName)
 }
 
-const archiveUsers = async (users: GuildMember[], dbName: string, storeMediaLocally: boolean) => {
+const archiveUsers = async (
+  users: GuildMember[],
+  dbName: string,
+  storeMediaLocally: boolean
+) => {
   const userInfos: UserInfo[] = []
 
   await Promise.all(
     users.map(async (user) => {
-      const avatarData = storeMediaLocally ? await downloadMedia(user.user.avatarURL() || null) : null
+      const avatarData = storeMediaLocally
+        ? await downloadMedia(user.user.avatarURL() || null)
+        : null
       userInfos.push({
         id: user.id,
         displayName: user.displayName,
@@ -196,6 +208,9 @@ const archiveMessages = async (
         userId: message.author.id,
         hasMedia: message.attachments.size > 0,
         timestamp: message.createdTimestamp,
+        pinned: message.pinned,
+        type: message.type.toString(),
+        systemMessage: message.system,
       })
 
       if (message.attachments.size > 0) {
@@ -215,7 +230,9 @@ const archiveMedia = async (message: Message, storeMediaLocally: boolean) => {
   const attachments = Array.from(message.attachments.values())
   await Promise.all(
     attachments.map(async (attachment) => {
-      const attachmentData = storeMediaLocally ? await downloadMedia(attachment.url) : null
+      const attachmentData = storeMediaLocally
+        ? await downloadMedia(attachment.url)
+        : null
 
       mediaInfos.push({
         id: attachment.id,
