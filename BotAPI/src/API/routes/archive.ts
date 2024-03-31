@@ -55,7 +55,22 @@ router.get("/archive/servers/:id/channels/:channelId", async (req, res) => {
 
   const dbName = getServerDBName(server)
 
-  const messages = await getChannelMessages(dbName, channelId)
+  const messages = await getChannelMessages(dbName, channelId, false)
+
+  res.json(messages)
+})
+
+router.get("/archive/servers/:id/threads/:threadId", async (req, res) => {
+  const serverId = req.params.id
+  const threadId = req.params.threadId
+
+  const servers = await getArchivedServers(SERVER_LIST_DB_NAME)
+
+  const server = servers.find((server) => `${server.id}` === `${serverId}`)
+
+  const dbName = getServerDBName(server)
+
+  const messages = await getChannelMessages(dbName, threadId, true)
 
   res.json(messages)
 })

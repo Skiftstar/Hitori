@@ -196,9 +196,16 @@ export const getServerCategoryChannels = async (dbName: string) => {
 
   const categories = await db.all("SELECT * FROM categories")
   const channels = await db.all("SELECT * FROM channels")
+  const threads = await db.all("SELECT * FROM threads")
   db.close()
 
-  const categoryChannels: { [categoryId: string]: GuildChannel[] } = {}
+  channels.forEach((channel) => {
+    const channelThreads = threads.filter(
+      (thread) => thread.channelID === channel.id
+    )
+    channel.threads = channelThreads
+  })
+
   categories.forEach((category) => {
     const channelsForCategory = channels.filter(
       (channel) => channel.categoryID === category.id
@@ -230,7 +237,11 @@ export const getServerUsers = async (dbName: string) => {
   return users
 }
 
-export const getChannelMessages = async (dbName: string, channelId: string) => {
+export const getChannelMessages = async (
+  dbName: string,
+  channelId: string,
+  isThread: boolean
+) => {
   if (!doesDatabaseExist(dbName)) return []
 
   const db = await open({
@@ -238,10 +249,11 @@ export const getChannelMessages = async (dbName: string, channelId: string) => {
     driver: Database,
   })
 
-  const messages = await db.all(
-    "SELECT * FROM messages WHERE channelId = ? ORDER BY timestamp ASC",
-    channelId
-  )
+  const query = isThread
+    ? "SELECT * FROM messages WHERE threadID = ? OR id = ?"
+    : "SELECT * FROM messages WHERE channelId = ? AND threadID IS NULL"
+
+  const messages = await db.all(query, channelId, isThread ? channelId : undefined)
 
   db.close()
 
