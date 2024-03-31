@@ -63,9 +63,9 @@ const MessageDisplay = ({ messages, users }: MessageDisplayProps) => {
               <div
                 key={message.id}
                 className={`flex flex-row p-2 mt-2 ${
-                  connectingMessage && "pt-0 mt-0 pb-0 pl-12"
+                  connectingMessage && "!pt-0 !mt-0 !pb-0 !pl-12"
                 } ${
-                  nextMessageConnecting && "pb-0"
+                  nextMessageConnecting && "!pb-0"
                 } items-start gap-2 hover:bg-secondary-color/20`}
               >
                 {!connectingMessage && (

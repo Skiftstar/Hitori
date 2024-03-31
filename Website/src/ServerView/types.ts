@@ -8,10 +8,17 @@ export type ArchivedServer = {
   updated: string
 }
 
+export type Thread = {
+  id: string
+  name: string
+  channelID: string
+}
+
 export type Channel = {
   id: string
   name: string
   categoryID: string
+  threads: Thread[]
 }
 
 export type Category = {

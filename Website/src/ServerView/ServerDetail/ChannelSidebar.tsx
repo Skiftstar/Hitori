@@ -1,11 +1,12 @@
-import { Channel as ChannelType, ServerCategoryChannelResponse } from "../types"
+import { Channel as ChannelType, Thread as ThreadType, ServerCategoryChannelResponse } from "../types"
 import Channel from "./Channel"
+import Thread from "./Thread"
 
 interface ChannelSidebarProps {
   serverName: string
   channelCategories: ServerCategoryChannelResponse
   setSelectedChannel: Function
-  selectedChannel: ChannelType | null
+  selectedChannel: ChannelType | ThreadType | null
   className?: string
 }
 
@@ -28,12 +29,23 @@ const ChannelSidebar = ({
         {channelCategories.channelsWithoutCategory.length > 0 && (
           <div className="pb-4">
             {channelCategories.channelsWithoutCategory.map((channel) => (
-              <Channel
-                key={channel.id}
-                channel={channel}
-                setSelectedChannel={setSelectedChannel}
-                selected={channel.id === selectedChannel?.id}
-              />
+              <>
+                <Channel
+                  key={channel.id}
+                  channel={channel}
+                  setSelectedChannel={setSelectedChannel}
+                  selected={channel.id === selectedChannel?.id}
+                />
+                {channel.threads.map((thread) => (
+                  <Thread
+                    key={thread.id}
+                    thread={thread}
+                    setSelectedChannel={setSelectedChannel}
+                    selected={thread.id === selectedChannel?.id}
+                    className="pl-4"
+                  />
+                ))}
+              </>
             ))}
           </div>
         )}
@@ -42,12 +54,23 @@ const ChannelSidebar = ({
           <div key={category.id} className="pb-4">
             <div className="text-category-color">{category.name}</div>
             {category.channels.map((channel) => (
-              <Channel
-                key={channel.id}
-                channel={channel}
-                setSelectedChannel={setSelectedChannel}
-                selected={channel.id === selectedChannel?.id}
-              />
+              <>
+                <Channel
+                  key={channel.id}
+                  channel={channel}
+                  setSelectedChannel={setSelectedChannel}
+                  selected={channel.id === selectedChannel?.id}
+                />
+                {channel.threads.map((thread) => (
+                  <Thread
+                    key={thread.id}
+                    thread={thread}
+                    setSelectedChannel={setSelectedChannel}
+                    selected={thread.id === selectedChannel?.id}
+                    className="pl-4"
+                  />
+                ))}
+              </>
             ))}
           </div>
         ))}

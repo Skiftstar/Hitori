@@ -34,10 +34,11 @@ export const getServerUsers = async (serverId: string): Promise<UserMap> => {
 
 export const getChannelMessages = async (
   serverId: string,
-  channelId: string
+  channelId: string,
+  isThread: boolean
 ): Promise<Message[]> => {
   const response = await fetch(
-    `${BASE_URL}/archive/servers/${serverId}/channels/${channelId}`
+    isThread ? `${BASE_URL}/archive/servers/${serverId}/threads/${channelId}` : `${BASE_URL}/archive/servers/${serverId}/channels/${channelId}`
   )
   const data = await response.json()
   return data

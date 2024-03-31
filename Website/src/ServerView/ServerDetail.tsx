@@ -4,6 +4,7 @@ import {
   Channel,
   Message,
   ServerCategoryChannelResponse,
+  Thread,
   UserMap,
 } from "./types"
 import {
@@ -22,7 +23,9 @@ interface ServerDetailProps {
 
 const ServerDetail = ({ server }: ServerDetailProps) => {
   const [data, setData] = useState<ServerCategoryChannelResponse | null>(null)
-  const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null)
+  const [selectedChannel, setSelectedChannel] = useState<
+    Channel | Thread | null
+  >(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [displayedMessages, setDisplayedMessages] = useState<Message[]>([])
   const [users, setUsers] = useState<UserMap>({})
@@ -30,13 +33,23 @@ const ServerDetail = ({ server }: ServerDetailProps) => {
 
   useEffect(() => {
     const fetchEntries = async () => {
+      setSearch("")
+
+      if (!selectedChannel) {
+        setMessages([])
+        setDisplayedMessages([])
+        return
+      }
+
+      const isThread = (selectedChannel as Channel).threads === undefined
+
       const messages = await getChannelMessages(
         server.id,
-        selectedChannel?.id || ""
+        selectedChannel?.id || "",
+        isThread
       )
       setMessages(messages)
       setDisplayedMessages(messages)
-      setSearch("")
     }
 
     fetchEntries()
