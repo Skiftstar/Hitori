@@ -179,8 +179,6 @@ const archiveLeftUsers = async (
 ) => {
   const userInfos: UserInfo[] = []
 
-  console.log(users)
-
   await Promise.all(
     users.map(async (user: User) => {
       const avatarData = storeMediaLocally
