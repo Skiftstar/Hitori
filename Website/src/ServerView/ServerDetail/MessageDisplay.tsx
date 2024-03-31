@@ -32,6 +32,8 @@ const MessageDisplay = ({
       return `${user?.displayName} changed the channel name to`
     } else if (message.type === "12") {
       return `${user?.displayName} added a Channel to the follow list`
+    } else if (message.type === "7") {
+      return `${user?.displayName} joined the Server`
     }
   }
 
@@ -57,10 +59,12 @@ const MessageDisplay = ({
           // We need this check to determine if this is the first message in a sequence of messages from the same user
           const nextMessageConnecting =
             nextMessage?.userID === message.userID &&
+            !nextMessage.isSystemMessage &&
             nextMessageTime.getTime() - currMessageTime.getTime() <= maxGap
 
           const connectingMessage =
             prevMessage?.userID === message.userID &&
+            !prevMessage.isSystemMessage &&
             currMessageTime.getTime() - prevMessageTime.getTime() <= maxGap
 
           // Since a thread will have the ID of the message that started it
