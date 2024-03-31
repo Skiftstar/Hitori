@@ -250,10 +250,16 @@ export const getChannelMessages = async (
   })
 
   const query = isThread
-    ? "SELECT * FROM messages WHERE threadID = ? OR id = ?"
+    ? // Make sure to include the first message in the thread with id = channel.id
+      //( bc Thread has the same ID as the first message ) as first message is not included by default
+      "SELECT * FROM messages WHERE threadID = ? OR id = ?"
     : "SELECT * FROM messages WHERE channelId = ? AND threadID IS NULL"
 
-  const messages = await db.all(query, channelId, isThread ? channelId : undefined)
+  const messages = await db.all(
+    query,
+    channelId,
+    isThread ? channelId : undefined
+  )
 
   db.close()
 
