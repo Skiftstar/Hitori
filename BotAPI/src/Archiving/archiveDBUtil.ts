@@ -73,7 +73,7 @@ export const insertMessages = async (
         message.timestamp,
         message.pinned,
         message.type,
-        message.systemMessage
+        message.systemMessage,
       ]
     )
   })
@@ -255,6 +255,8 @@ export const getChannelMessages = async (
   const query = isThread
     ? // Make sure to include the first message in the thread with id = channel.id
       //( bc Thread has the same ID as the first message ) as first message is not included by default
+      //   "SELECT messages.*, messages.type AS messageType, media.type AS mediaType, media.* FROM messages LEFT JOIN media ON messages.id = media.messageID WHERE messages.threadId = ? OR messages.id = ? IS NULL ORDER BY messages.timestamp ASC"
+      // : "SELECT messages.*, messages.type AS messageType, media.type AS mediaType, media.* FROM messages LEFT JOIN media ON messages.id = media.messageID WHERE messages.channelId = ? AND messages.threadID IS NULL ORDER BY messages.timestamp ASC"
       "SELECT * FROM messages WHERE threadID = ? OR id = ? ORDER BY timestamp ASC"
     : "SELECT * FROM messages WHERE channelId = ? AND threadID IS NULL ORDER BY timestamp ASC"
 
