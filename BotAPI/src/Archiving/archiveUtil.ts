@@ -84,27 +84,25 @@ export const archiveServer = async (guildId: string) => {
   // Users that left the server but still have messages in it
   const leftUsers: Set<User> = new Set()
 
-  await Promise.all(
-    textChannels.map(async (channel: GuildBasedChannel) => {
-      await archiveMessages(
-        channel as TextChannel,
-        dbName,
-        storeMediaLocally,
-        leftUsers
-      )
-    })
-  )
+  for (const channel of textChannels) {
+    await archiveMessages(
+      channel as TextChannel,
+      dbName,
+      storeMediaLocally,
+      leftUsers
+    )
+    console.log("archived channel", channel.name)
+  }
 
-  await Promise.all(
-    threads.map(async (channel: GuildBasedChannel) => {
-      await archiveMessages(
-        channel as ThreadChannel,
-        dbName,
-        storeMediaLocally,
-        leftUsers
-      )
-    })
-  )
+  for (const channel of threads) {
+    await archiveMessages(
+      channel as ThreadChannel,
+      dbName,
+      storeMediaLocally,
+      leftUsers
+    )
+  }
+
   await archiveThreads(threads as ThreadChannel[], dbName)
   await archiveUsers(guildMembers, dbName, storeMediaLocally)
   await archiveLeftUsers(Array.from(leftUsers), dbName, storeMediaLocally)
