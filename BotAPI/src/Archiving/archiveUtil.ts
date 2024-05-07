@@ -43,7 +43,7 @@ export const archiveServer = async (guildId: string) => {
   const guild = getGuild(guildId)
   if (!guild) throw new Error("Guild not found")
 
-  const channelsOnGuild = getChannelsOfGuild(guildId)
+  const channelsOnGuild = await getChannelsOfGuild(guildId)
   if (channelsOnGuild.length === 0)
     throw new Error("No channels found on guild")
 

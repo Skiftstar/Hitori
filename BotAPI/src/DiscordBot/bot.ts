@@ -2,7 +2,9 @@ import {
   EmbedBuilder,
   TextChannel,
   ChatInputCommandInteraction,
-  GuildBasedChannel,
+  ChannelType,
+  BaseGuildTextChannel,
+  GuildTextBasedChannel,
 } from "discord.js"
 import { getConfigValue } from "../Config/config"
 import { client } from ".."
@@ -52,11 +54,25 @@ export const getChannelById = (channelId: string) => {
     ?.channels.cache.get(channelId) as TextChannel
 }
 
-export const getChannelsOfGuild = (guildId: string) => {
+export const getChannelsOfGuild = async (guildId: string) => {
   const guild = client.guilds.cache.get(guildId)
 
   const channels = Array.from(guild?.channels.cache.values() || [])
-  return channels
+  let archivedThreadChannels: GuildTextBasedChannel[] = []
+
+  // We need to fetch archived threads separately, because Discord...
+  for (const channel of channels) {
+    if (!(channel.type === ChannelType.GuildText)) continue
+
+    const textChannel = channel as BaseGuildTextChannel
+
+    const archivedThreads = await textChannel.threads.fetchArchived({
+      fetchAll: true,
+    })
+    archivedThreadChannels.push(...Array.from(archivedThreads.threads.values()))
+  }
+
+  return [...channels, ...archivedThreadChannels]
 }
 
 export const getGuild = (guildId: string) => {
