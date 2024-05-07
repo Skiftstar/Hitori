@@ -16,7 +16,7 @@ Personal Use Discord Bot with DiscordJS. Features added as I need them
 # Archive Usage
 
 - Put your Bot token and and Bot Client ID in `BotAPI/config/config.json`
-- If you don't want to download media and store it in the Database, set `storeMediaLocally` in the config to `false`. When set to false it will only store the MediaURL, keep in mind though that when this URL doesn't work anymore, the media breaks as well.
+- If you don't want to download media and store it in the Database, set `storeMediaLocally` in the config to `false`. When set to false it will only store the MediaURL, keep in mind though that when this URL doesn't work anymore, the media breaks as well, it is not recommended to set this to false. Keep in mind, that right now, ALL messages of the channel and their media are loaded when clicking on a channel, so not having media locally can use a lot of data.
 - Run `npm run install:all` in the root dir to install dependencies
 - Run `npm start` in the root dir
 - Your Bot and Express Server should be running now and the React website availabe on localhost

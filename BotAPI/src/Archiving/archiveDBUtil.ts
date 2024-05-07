@@ -296,7 +296,7 @@ export const getMessageMedia = async (dbName: string, messageId: string) => {
 
   const mediaWithBase64Data = media.map((item) => ({
     ...item,
-    data: item.data.toString("base64"),
+    data: item.data ? item.data.toString("base64") : undefined,
   }))
 
   db.close()
