@@ -89,13 +89,15 @@ export const insertMedia = async (media: MediaInfo[], dbName: string) => {
 
   media.forEach((mediaInfo) => {
     db.run(
-      "INSERT OR IGNORE INTO media (id, messageId, url, type, data) VALUES (?, ?, ?, ?, ?)",
+      "INSERT OR IGNORE INTO media (id, messageId, url, type, data, title, size) VALUES (?, ?, ?, ?, ?, ?, ?)",
       [
         mediaInfo.id,
         mediaInfo.messageId,
         mediaInfo.url,
         mediaInfo.type,
         mediaInfo.data,
+        mediaInfo.title,
+        mediaInfo.size,
       ]
     )
   })
@@ -268,7 +270,38 @@ export const getChannelMessages = async (
 
   db.close()
 
+  for (const message of messages) {
+    if (message.hasMedia) {
+      message.media = await getMessageMedia(dbName, message.id)
+    } else {
+      message.media = []
+    }
+  }
+
   return messages
+}
+
+export const getMessageMedia = async (dbName: string, messageId: string) => {
+  if (!doesDatabaseExist(dbName)) return []
+
+  const db = await open({
+    filename: dbName,
+    driver: Database,
+  })
+
+  const media = await db.all(
+    "SELECT * FROM Media WHERE messageID = ?",
+    messageId
+  )
+
+  const mediaWithBase64Data = media.map((item) => ({
+    ...item,
+    data: item.data.toString("base64"),
+  }))
+
+  db.close()
+
+  return mediaWithBase64Data
 }
 
 export const getServerDBName = (server: ServerInfo) => {

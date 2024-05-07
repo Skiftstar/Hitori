@@ -47,6 +47,8 @@ CREATE TABLE Media (
     id TEXT PRIMARY KEY,
     messageID TEXT,
     url TEXT,
+    title TEXT,
+    size INTEGER,
     type TEXT,
     data BLOB,
     FOREIGN KEY(messageID) REFERENCES Messages(id)

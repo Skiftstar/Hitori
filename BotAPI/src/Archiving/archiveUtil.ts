@@ -318,6 +318,8 @@ const archiveMedia = async (message: Message, storeMediaLocally: boolean) => {
         id: attachment.id,
         messageId: message.id,
         url: attachment.url,
+        title: attachment.name,
+        size: attachment.size,
         type: attachment.contentType || "unknown",
         data: attachmentData,
       })
