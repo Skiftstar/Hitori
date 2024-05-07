@@ -1,14 +1,20 @@
 # Hitori
+
 Personal Use Discord Bot with DiscordJS. Features added as I need them
 
 # TODOs
+
 - Webapp to control bot besides having slash commands
-- Webapp for displaying archived Servers
+- More Search Queries like has:file
+- QoL things like bot displaying Progress
 
 # Completed
+
 - Archiving Function to Archive a single Discord Server into a SQLite Format
+- Webapp for displaying archived Servers (lmk if anything is still missing)
 
 # Archive Usage
+
 - Put your Bot token and and Bot Client ID in `BotAPI/config/config.json`
 - If you don't want to download media and store it in the Database, set `storeMediaLocally` in the config to `false`. When set to false it will only store the MediaURL, keep in mind though that when this URL doesn't work anymore, the media breaks as well.
 - Run `npm run install:all` in the root dir to install dependencies
@@ -17,6 +23,7 @@ Personal Use Discord Bot with DiscordJS. Features added as I need them
 - Invite the Bot to your Server and run `/archive`
 
 # Archive Search Terms
+
 - `from:userId` shows messages from a user with that ID
 - `from:username` shows messages from a user with that username (or display name)
 - `from:"user name"` shows messages from a user with displayname (or username) useful when a user has spaces in their name
