@@ -44,7 +44,7 @@ const MediaDisplay = ({ media }: { media: Media[] }) => {
 
     if (media.type.startsWith("audio")) {
       return (
-        <div className="bg-black/40 p-2 flex gap-2 flex-col">
+        <div className="bg-black/40 p-2 flex gap-2 flex-col rounded my-2">
           <div
             className="ml-2 cursor-pointer flex justify-between items-center"
             onClick={() => {
@@ -68,7 +68,7 @@ const MediaDisplay = ({ media }: { media: Media[] }) => {
     } else {
       return (
         <div
-          className="bg-black/40 p-2 cursor-pointer flex justify-between items-center"
+          className="bg-black/40 p-2 my-2 cursor-pointer flex justify-between items-center rounded"
           onClick={() => {
             const link = document.createElement("a")
             link.href = media.url
