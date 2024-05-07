@@ -27,6 +27,9 @@ Personal Use Discord Bot with DiscordJS. Features added as I need them
 - `from:userId` shows messages from a user with that ID
 - `from:username` shows messages from a user with that username (or display name)
 - `from:"user name"` shows messages from a user with displayname (or username) useful when a user has spaces in their name
+- `after:DATE` shows messages after a specific Date. Date format: YYYY-MM-DD. You also only type 2024 (After Year 2024) or 2024-03 (After March 1st 2024)
+- `before:DATE` shows messages before a specific Date. Date format: YYYY-MM-DD. You also only type 2024 (Before Year 2024) or 2024-03 (Before March 1st 2024)
+- `has:TYPE` shows only messages containing this media type. For example `has:image` will only show messages with images. `has:pdf` will only show messages with PDFs.
 
 `from` terms add up, meaning `from:userA from:userB` will show messages from userA AND userB
 
