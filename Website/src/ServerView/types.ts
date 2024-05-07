@@ -39,10 +39,21 @@ export type Message = {
   threadID: string
   userID: string
   hasMedia: boolean
+  media: Media[]
   timestamp: number
   type: string
   isSystemMessage: boolean
   isPinned: boolean
+}
+
+export type Media = {
+  id: string
+  messageID: string
+  url: string
+  title: string
+  type: string
+  size: number
+  data: string // Base64 Encoded
 }
 
 export type User = {

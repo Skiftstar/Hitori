@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react"
 import { Message, Thread, User, UserMap } from "../types"
 import ThreadBanner from "./ThreadBanner"
+import MediaDisplay from "./MediaDisplay"
 
 interface MessageDisplayProps {
   messages: Message[]
@@ -44,6 +45,7 @@ const MessageDisplay = ({
       <div className="flex flex-col h-full w-full">
         {messages.map((message, index) => {
           const user = users[message.userID]
+
           const prevMessage = index > 0 ? messages[index - 1] : null
           const nextMessage =
             index < messages.length - 1 ? messages[index + 1] : null
@@ -135,6 +137,9 @@ const MessageDisplay = ({
                     )}
                   </div>
                   <div className="whitespace-pre-wrap">{message.content}</div>
+                  <div className="flex flex-col gap-2">
+                    <MediaDisplay media={message.media} />
+                  </div>
                   {thread && (
                     <ThreadBanner thread={thread} setChannel={setChannel} />
                   )}
