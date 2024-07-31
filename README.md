@@ -7,6 +7,8 @@ Personal Use Discord Bot with DiscordJS. Features added as I need them
 - Webapp to control bot besides having slash commands
 - More Search Queries like has:file
 - QoL things like bot displaying Progress
+- Full Markdown support for displaying Servers
+- Custom Emoji Support for displaying Servers
 
 # Completed
 
