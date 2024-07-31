@@ -17,9 +17,9 @@ export type MessageInfo = {
   userId: string
   hasMedia: boolean
   timestamp: number
-  pinned: boolean
+  isPinned: boolean
   type: string
-  systemMessage: boolean
+  isSystemMessage: boolean
 }
 
 export type MediaInfo = {
@@ -52,7 +52,7 @@ export type ServerInfo = {
   serverName: string
   serverIconURL: string
   serverIconData: any
-  created: number
+  created: string
 }
 
 export const ARCHIVE_FOLDER_NAME = "Archiving"

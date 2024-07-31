@@ -1,6 +1,5 @@
 import {
   ChannelType,
-  Collection,
   DiscordAPIError,
   Guild,
   GuildBasedChannel,
@@ -28,13 +27,15 @@ import {
   SERVER_ARCHIVE_FOLDER_NAME,
 } from "./archiveTypes"
 import {
-  insertCategories,
-  insertChannels,
-  insertMedia,
-  insertMessages,
-  insertServerInfo,
-  insertThreads,
-  insertUsers,
+	formatDate,
+	insert,
+  // insertCategories,
+  // insertChannels,
+  // insertMedia,
+  // insertMessages,
+  // insertServerInfo,
+  // insertThreads,
+  // insertUsers,
 } from "./archiveDBUtil"
 import { get } from "https"
 import { getConfigValue } from "../Config/config"
@@ -124,10 +125,10 @@ const archiveServerInfo = async (
     serverName: guild.name,
     serverIconURL: guild.iconURL() || "",
     serverIconData: iconData,
-    created: guild.createdTimestamp,
+    created: formatDate(new Date(guild.createdTimestamp)),
   }
 
-  await insertServerInfo(serverInfo, dbName)
+  await insert(dbName, "Servers", [serverInfo])
 }
 
 const archiveThreads = async (threads: ThreadChannel[], dbName: string) => {
@@ -141,7 +142,7 @@ const archiveThreads = async (threads: ThreadChannel[], dbName: string) => {
     })
   })
 
-  await insertThreads(threadInfos, dbName)
+  await insert(dbName, "Threads", threadInfos)
 }
 
 const archiveUsers = async (
@@ -167,7 +168,7 @@ const archiveUsers = async (
     })
   )
 
-  await insertUsers(userInfos, dbName)
+  await insert(dbName, "users", userInfos)
 }
 
 const archiveLeftUsers = async (
@@ -193,7 +194,7 @@ const archiveLeftUsers = async (
     })
   )
 
-  await insertUsers(userInfos, dbName)
+  await insert(dbName, "users", userInfos)
 }
 
 const archiveCategories = async (
@@ -209,7 +210,7 @@ const archiveCategories = async (
     })
   })
 
-  await insertCategories(categoryInfos, dbName)
+  await insert(dbName, "Categories", categoryInfos)
 }
 
 const archiveChannels = async (
@@ -226,7 +227,7 @@ const archiveChannels = async (
     })
   })
 
-  await insertChannels(channelInfos, dbName)
+  await insert(dbName, "channels", channelInfos)
 }
 
 const archiveMessages = async (
@@ -288,9 +289,9 @@ const archiveMessages = async (
         userId: message.author.id,
         hasMedia: message.attachments.size > 0,
         timestamp: message.createdTimestamp,
-        pinned: message.pinned,
+        isPinned: message.pinned,
         type: message.type.toString(),
-        systemMessage: message.system,
+        isSystemMessage: message.system,
       })
 
       if (message.attachments.size > 0) {
@@ -300,8 +301,8 @@ const archiveMessages = async (
     })
   )
 
-  await insertMessages(messageInfos, dbName)
-  await insertMedia(mediaInfos, dbName)
+  await insert(dbName, "messages", messageInfos)
+  await insert(dbName, "media", mediaInfos)
 }
 
 const archiveMedia = async (message: Message, storeMediaLocally: boolean) => {

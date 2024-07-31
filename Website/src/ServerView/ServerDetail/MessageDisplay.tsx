@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react"
 import { Message, Thread, User, UserMap } from "../types"
 import ThreadBanner from "./ThreadBanner"
 import MediaDisplay from "./MediaDisplay"
+import DOMPurify from 'dompurify';
 
 interface MessageDisplayProps {
   messages: Message[]
@@ -40,6 +41,47 @@ const MessageDisplay = ({
     }
   }
 
+	function escapeHTML(html: string) {
+	  var div = document.createElement('div');
+	  div.textContent = html;
+	  return div.innerHTML;
+	}
+
+	const formatMessageContent = (content: string) => {
+		content = escapeHTML(content)
+
+		// Header 3 (### Text)
+		content = content.replace(/^### (.*?)(\n|$)/gm, '<h3>$1</h3>');
+	    content = content.replace(/^## (.*?)(\n|$)/gm, '<h2>$1</h2>');
+	    content = content.replace(/^# (.*?)(\n|$)/gm, '<h1>$1</h1>');
+
+		// Bold Italics (***text***)
+		content = content.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</strong></em>')
+
+		// Bold (**text**)
+		content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+		// Italic (*text*)
+		content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+		// Underline (__text__)
+		content = content.replace(/__(.*?)__/g, '<u>$1</u>');
+
+		// Italics (_text_)
+		content = content.replace(/_(.*?)_/g, '<em>$1</em>')
+
+		// Strikethrough (~~text~~)
+		content = content.replace(/~~(.*?)~~/g, '<del>$1</del>');
+
+		// Code Block (```Code```)
+		content = content.replace(/```([^]+?)```(\n|$)/g, '<pre class="bg-black/60"><code>$1</code></pre>');
+
+		// Inline code (`code`)
+		content = content.replace(/`(.*?)`/g, '<code class="bg-black/60">$1</code>');
+
+		return content;
+  }
+
   return (
     <div className="flex-1 h-[calc(100%-4rem)] overflow-y-auto pt-2 mb-2 w-full">
       <div className="flex flex-col h-full w-full">
@@ -73,7 +115,10 @@ const MessageDisplay = ({
 
           // Since a thread will have the ID of the message that started it
           // We can check if the message started a thread by doing a simple ID match
-          const thread = threads.find((thread) => thread.id === message.id)
+		  const thread = threads.find((thread) => thread.id === message.id)
+
+		  const formattedContent = formatMessageContent(message.content);
+		  const safeContent = DOMPurify.sanitize(formattedContent);
 
           return (
             <>
@@ -136,7 +181,7 @@ const MessageDisplay = ({
                       </div>
                     )}
                   </div>
-                  <div className="whitespace-pre-wrap">{message.content}</div>
+				  <div className="whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: safeContent}}/>
                   <div className="flex flex-col gap-2">
                     <MediaDisplay media={message.media} />
                   </div>
