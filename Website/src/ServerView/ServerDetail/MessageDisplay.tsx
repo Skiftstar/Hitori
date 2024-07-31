@@ -52,8 +52,11 @@ const MessageDisplay = ({
 
 		// Header 3 (### Text)
 		content = content.replace(/^### (.*?)(\n|$)/gm, '<h3>$1</h3>');
-	    content = content.replace(/^## (.*?)(\n|$)/gm, '<h2>$1</h2>');
-	    content = content.replace(/^# (.*?)(\n|$)/gm, '<h1>$1</h1>');
+		content = content.replace(/^## (.*?)(\n|$)/gm, '<h2>$1</h2>');
+		content = content.replace(/^# (.*?)(\n|$)/gm, '<h1>$1</h1>');
+
+		// Subtext (-# text)
+		content = content.replace(/^-# (.*?)(\n|$)/gm, '<sub>$1</sub>');
 
 		// Bold Italics (***text***)
 		content = content.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</strong></em>')
@@ -78,6 +81,12 @@ const MessageDisplay = ({
 
 		// Inline code (`code`)
 		content = content.replace(/`(.*?)`/g, '<code class="bg-black/60">$1</code>');
+
+		// Links [Text](Link)
+		content = content.replace(/\[([^\]]+)\]\((https?:\/\/[^\s]+)\)/g, '<a class="text-blue-500 hover:underline" href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+		// Block quotes (> text)
+		content = content.replace(/^&gt; (.*?)(\n|$)/gm, '<blockquote class="border-l-4 border-gray-400 pl-4">$1</blockquote>');
 
 		return content;
   }
@@ -118,7 +127,9 @@ const MessageDisplay = ({
 		  const thread = threads.find((thread) => thread.id === message.id)
 
 		  const formattedContent = formatMessageContent(message.content);
-		  const safeContent = DOMPurify.sanitize(formattedContent);
+		  const safeContent = DOMPurify.sanitize(formattedContent, {
+			ADD_ATTR: ['target', 'rel']
+		  });
 
           return (
             <>
