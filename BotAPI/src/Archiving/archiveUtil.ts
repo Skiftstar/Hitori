@@ -29,13 +29,6 @@ import {
 import {
 	formatDate,
 	insert,
-  // insertCategories,
-  // insertChannels,
-  // insertMedia,
-  // insertMessages,
-  // insertServerInfo,
-  // insertThreads,
-  // insertUsers,
 } from "./archiveDBUtil"
 import { get } from "https"
 import { getConfigValue } from "../Config/config"
